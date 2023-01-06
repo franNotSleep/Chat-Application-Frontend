@@ -9,11 +9,14 @@ import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type GetToken = {
   token: string;
 };
 const Register = () => {
+  const navigate = useNavigate();
+
   const [input, setInput] = useState({
     name: "",
     email: "",
@@ -39,6 +42,7 @@ const Register = () => {
       );
       setError({ ...error, success: true });
       localStorage.setItem("user", JSON.stringify(data));
+      navigate("/chat");
     } catch (err: any) {
       setError(err.response.data);
     }

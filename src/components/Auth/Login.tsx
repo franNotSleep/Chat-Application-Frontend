@@ -8,11 +8,14 @@ import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type GetToken = {
   token: string;
 };
 const Login = () => {
+  const navigate = useNavigate();
+
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -31,12 +34,14 @@ const Login = () => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post<GetToken>(
+      const { data, status, headers } = await axios.post<GetToken>(
         "http://localhost:8080/api/v1/auth/login",
         input
       );
+
       setError({ ...error, success: true });
       localStorage.setItem("user", JSON.stringify(data));
+      navigate("/chat");
     } catch (err: any) {
       setError(err.response.data);
     }

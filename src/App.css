@@ -1,14 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Roboto&display=swap");
 
-body {
+.app {
   font-family: "Outfit";
   background-color: #5352ed;
-  display: flex;
-  width: 90%;
-  height: 90vh;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-  position: relative;
-  flex-wrap: wrap;
+  text-align: center;
+  padding: 2rem;
 }

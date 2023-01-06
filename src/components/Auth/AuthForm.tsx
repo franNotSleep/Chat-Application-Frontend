@@ -2,7 +2,8 @@ import './style.css';
 
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import images from '../../constants/images';
 import AuthNavBar from './AuthNavBar';
@@ -10,6 +11,15 @@ import Login from './Login';
 import Register from './Register';
 
 const AuthForm = () => {
+  // if user exist redirect to /chat route
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof localStorage.getItem("user") === "string") {
+      navigate("/chat");
+    }
+  });
+
   const [val, setVal] = useState(0);
 
   const setNewVal = (index: number) => {
