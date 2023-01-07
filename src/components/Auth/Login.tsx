@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 type GetToken = {
   token: string;
 };
+
 const Login = () => {
   const navigate = useNavigate();
 

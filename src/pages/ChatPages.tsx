@@ -4,19 +4,17 @@ import { Box } from '@mui/material';
 import Container from '@mui/material/Container/Container';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
 
 import ChatDisplay from '../components/Chat/ChatDisplay';
 import ChatForm from '../components/Chat/ChatForm';
+import GroupNav from '../components/Group/GroupNav';
 
 const ChatPages = () => {
   const [message, setMessage] = useState<string[]>([""]);
   const [msg, setMsg] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user") || "");
 
-  const socket = io("http://localhost:8080");
+  // const socket = io("http://localhost:8080");
 
   useEffect(() => {
     if (typeof localStorage.getItem("user") !== "string") {
@@ -29,7 +27,7 @@ const ChatPages = () => {
   };
 
   const clickHandler = () => {
-    socket.emit("hola", `${user.name}: ${msg}`);
+    // socket.emit("hola", `${user.name}: ${msg}`);
     setMessage([...message, msg]);
   };
 
@@ -37,25 +35,20 @@ const ChatPages = () => {
     <Container
       maxWidth="lg"
       sx={{
-        background: "#000",
         display: "flex",
         justifyContent: "flex-end",
       }}
     >
       <Box
         sx={{
-          padding: "2rem",
-
           background: "#2cf",
-          flex: 1,
         }}
       >
-        Search Group
+        <GroupNav />
       </Box>
       <Box
         sx={{
           padding: "2rem",
-
           width: 8 / 10,
           height: "80vh",
           background: "#fff",
