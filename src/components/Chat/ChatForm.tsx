@@ -1,34 +1,34 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 
-const ChatForm = () => {
-  const [message, setMessage] = useState<string[]>([]);
-  const [newMessage, setNewMessage] = useState<string>();
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
-  };
-  const submitHandler = (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+interface IChatFormProps {
+  onSubmitHandler(e: React.ChangeEvent<HTMLFormElement>): void;
+  onChangeHandler(e: React.ChangeEvent<HTMLInputElement>): void;
+  content: string;
+}
 
-    if (newMessage) {
-      setMessage((prev) => [...prev, newMessage]);
-    }
-
-    setNewMessage("");
-  };
+const ChatForm = (props: IChatFormProps) => {
+  const navigate = useNavigate();
   return (
     <div>
       <Box
-        onSubmit={submitHandler}
         component="form"
+        onSubmit={props.onSubmitHandler}
         sx={{
           display: "flex",
           rowGap: "2",
           margin: 2,
         }}
       >
-        <TextField fullWidth variant="standard" label="Message" />
+        <TextField
+          fullWidth
+          variant="standard"
+          label="Message"
+        value={props.content}
+          onChange={props.onChangeHandler}
+        />
         <Button variant="text" type="submit" endIcon={<SendIcon />}>
           Send
         </Button>
