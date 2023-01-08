@@ -23,7 +23,7 @@ interface ICreateGroupProps {
   handleClose(): void;
 }
 
-interface IUser {
+export interface IUser {
   name: string;
   email: string;
   _id: string;
@@ -34,7 +34,7 @@ interface IUserResponse {
 }
 
 interface ICreateGroupData {
-  users: string[];
+  participants: string[];
   name: string;
   admin: string;
 }
@@ -42,7 +42,7 @@ interface ICreateGroupData {
 const CreateGroup = (props: ICreateGroupProps) => {
   const navigate = useNavigate();
   const [input, setInput] = useState<ICreateGroupData>({
-    users: [],
+    participants: [],
     name: "",
     admin: "",
   });
@@ -68,19 +68,20 @@ const CreateGroup = (props: ICreateGroupProps) => {
     setInput({
       ...input,
       admin: adminId,
-      users: [...users.map((user) => user._id)],
+      participants: [...users.map((user) => user._id)],
     });
   };
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Createing group
+    // Creating group
     try {
       const requestConfig = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
+      console.log(input);
       const newGroup = await axios.post(
         "http://localhost:8080/api/v1/group/",
         input,
