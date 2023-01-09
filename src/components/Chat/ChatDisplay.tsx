@@ -2,9 +2,14 @@ import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { io } from 'socket.io-client';
 
 import { IUser } from '../Group/CreateGroup';
 import ChatForm from './ChatForm';
+import Message from './Message';
+
+// Connect to socket
+const socket = io("http://localhost:8080");
 
 export interface IGroup {
   _id: string;
@@ -36,8 +41,11 @@ const ChatDisplay = () => {
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Create new message and assign it to message state
+    // Emit message
+    socket.emit("sendMessage", newMessage);
+
     try {
-      const newMsg = await axios.post(
+      const { data } = await axios.post<IMessage>(
         `http://localhost:8080/api/v1/message/${group?._id}/message`,
         newMessage,
         {
@@ -51,7 +59,6 @@ const ChatDisplay = () => {
         sender: currentUser._id,
         content: "",
       });
-      console.log(newMsg);
     } catch (err: any) {
       console.log(group);
       console.log(err.response.data);
@@ -87,12 +94,44 @@ const ChatDisplay = () => {
       }
     );
 
-    setGroup(data.group[0]);
+    // Join Group
+    socket.emit("join group", data.group[0]);
+
+    if (currentUser.name === "Greg Harris") {
+      setGroup(data.group[0]);
+    } else {
+      setGroup(data.group[1]);
+    }
   };
+
+  // Get all message related to selected group
+  const getMessage = async () => {
+    const { data } = await axios.get<IMessage[]>(
+      `http://localhost:8080/api/v1/message/${group?._id}/message`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    setMessage(data);
+  };
+
+  useEffect(() => {
+    // Get Message
+    socket.on("receivedMessage", (msg: IMessage) => {
+      console.log(`msg from client: ${msg}`);
+      setMessage([...message, msg]);
+    });
+  });
 
   useEffect(() => {
     getSelectedGroup();
   }, []);
+
+  useEffect(() => {
+    getMessage();
+  }, [newMessage, group]);
 
   return (
     <Box
@@ -114,35 +153,15 @@ const ChatDisplay = () => {
         <Typography variant="h4" component="h2">
           {group?.name}
         </Typography>
-        <Message content="Francisco" />
+        {message.map((msg) => (
+          <Message content={msg.content} key={msg._id} />
+        ))}
       </Box>
       <ChatForm
         onSubmitHandler={submitHandler}
         onChangeHandler={changeHandler}
         content={newMessage ? newMessage.content : ""}
       />
-    </Box>
-  );
-};
-
-interface IMessageProps {
-  content: string;
-}
-
-const Message = (props: IMessageProps) => {
-  return (
-    <Box
-      sx={{
-        width: "max-content",
-        height: 20,
-        backgroundColor: "primary.dark",
-        "&:hover": {
-          backgroundColor: "primary.main",
-          opacity: [0.9, 0.8, 0.7],
-        },
-      }}
-    >
-      {props.content}
     </Box>
   );
 };

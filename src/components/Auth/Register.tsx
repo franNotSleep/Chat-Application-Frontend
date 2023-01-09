@@ -107,7 +107,7 @@ const Register = () => {
           ),
         }}
       />
-      <Fab type="submit" variant="extended" sx={{ backgroundColor: "#5352ed" }}>
+      <Fab type="submit" variant="extended">
         <AppRegistrationIcon sx={{ mr: 2 }} />
         Sign Up
       </Fab>

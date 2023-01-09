@@ -91,7 +91,7 @@ const Login = () => {
           ),
         }}
       />
-      <Fab variant="extended" type="submit" sx={{ backgroundColor: "#5352ed" }}>
+      <Fab variant="extended" type="submit">
         <LoginIcon sx={{ mr: 2 }} />
         Login
       </Fab>
