@@ -6,6 +6,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { IGroup } from '../Chat/ChatDisplay';
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -20,7 +22,9 @@ const style = {
 
 interface ICreateGroupProps {
   open: boolean;
+  onGetGroup: (_group: IGroup) => void;
   handleClose(): void;
+  onSubmitEffect: () => void;
 }
 
 export interface IUser {
@@ -82,12 +86,13 @@ const CreateGroup = (props: ICreateGroupProps) => {
         },
       };
       console.log(input);
-      const newGroup = await axios.post(
+      const newGroup = await axios.post<IGroup>(
         "http://localhost:8080/api/v1/group/",
         input,
         requestConfig
       );
-      console.log(newGroup.data);
+      props.onGetGroup(newGroup.data);
+      props.onSubmitEffect();
     } catch (err: any) {
       console.log(err.response.data);
     }

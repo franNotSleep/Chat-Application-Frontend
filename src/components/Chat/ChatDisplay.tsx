@@ -32,21 +32,20 @@ interface IMessage {
   group?: string;
 }
 
-const ChatDisplay = () => {
+interface IChatDisplayProps {
+  selectedGroup: IGroup | undefined;
+}
+
+const ChatDisplay = (props: IChatDisplayProps) => {
   const navigate = useNavigate();
-  const [group, setGroup] = useState<IGroup>();
   const [message, setMessage] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<IMessage>();
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Create new message and assign it to message state
-    // Emit message
-    socket.emit("sendMessage", newMessage);
-
     try {
-      const { data } = await axios.post<IMessage>(
-        `http://localhost:8080/api/v1/message/${group?._id}/message`,
+      await axios.post<IMessage>(
+        `http://localhost:8080/api/v1/message/${props.selectedGroup?._id}/message`,
         newMessage,
         {
           headers: {
@@ -60,7 +59,6 @@ const ChatDisplay = () => {
         content: "",
       });
     } catch (err: any) {
-      console.log(group);
       console.log(err.response.data);
     }
   };
@@ -83,31 +81,10 @@ const ChatDisplay = () => {
   } catch (err) {
     navigate("/");
   }
-  // Get group
-  const getSelectedGroup = async () => {
-    const { data } = await axios.get<IGroupResponse>(
-      "http://localhost:8080/api/v1/group?search=",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    // Join Group
-    socket.emit("join group", data.group[0]);
-
-    if (currentUser.name === "Greg Harris") {
-      setGroup(data.group[0]);
-    } else {
-      setGroup(data.group[1]);
-    }
-  };
-
   // Get all message related to selected group
   const getMessage = async () => {
     const { data } = await axios.get<IMessage[]>(
-      `http://localhost:8080/api/v1/message/${group?._id}/message`,
+      `http://localhost:8080/api/v1/message/${props.selectedGroup?._id}/message`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -118,20 +95,8 @@ const ChatDisplay = () => {
   };
 
   useEffect(() => {
-    // Get Message
-    socket.on("receivedMessage", (msg: IMessage) => {
-      console.log(`msg from client: ${msg}`);
-      setMessage([...message, msg]);
-    });
-  });
-
-  useEffect(() => {
-    getSelectedGroup();
-  }, []);
-
-  useEffect(() => {
     getMessage();
-  }, [newMessage, group]);
+  }, [props.selectedGroup]);
 
   return (
     <Box
@@ -151,7 +116,7 @@ const ChatDisplay = () => {
         }}
       >
         <Typography variant="h4" component="h2">
-          {group?.name}
+          {props.selectedGroup?.name}
         </Typography>
         {message.map((msg) => (
           <Message content={msg.content} key={msg._id} />

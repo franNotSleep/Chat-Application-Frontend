@@ -5,11 +5,16 @@ import Container from '@mui/material/Container/Container';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import ChatDisplay from '../components/Chat/ChatDisplay';
+import ChatDisplay, { IGroup } from '../components/Chat/ChatDisplay';
 import GroupNav from '../components/Group/GroupNav';
 
 const ChatPages = () => {
   const navigate = useNavigate();
+  const [group, setGroup] = useState<IGroup>();
+
+  const getGroup = (_group: IGroup) => {
+    setGroup(_group);
+  };
 
   useEffect(() => {
     if (typeof localStorage.getItem("user") !== "string") {
@@ -30,9 +35,9 @@ const ChatPages = () => {
           background: "#2cf",
         }}
       >
-        <GroupNav />
+        <GroupNav onGetGroup={getGroup} />
       </Box>
-      <ChatDisplay />
+      <ChatDisplay selectedGroup={group} />
     </Container>
   );
 };
