@@ -4,10 +4,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { IGroup } from '../Chat/ChatDisplay';
-import CreateGroup from './CreateGroup';
+import CreateGroup, { IUser } from './CreateGroup';
 import SearchGroup from './SearchGroup';
 
 interface IGroupNavProps {
@@ -15,9 +17,25 @@ interface IGroupNavProps {
 }
 
 const GroupNav = (props: IGroupNavProps) => {
+  const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
+
+  let token!: string;
+  let currentUser!: IUser;
+
+  // If not token, go back to the form component
+  try {
+    if (JSON.parse(localStorage.getItem("user") || "").token) {
+      token = JSON.parse(localStorage.getItem("user") || "").token;
+      currentUser = JSON.parse(localStorage.getItem("user") || "");
+    } else {
+      navigate("/");
+    }
+  } catch (err) {
+    navigate("/");
+  }
 
   const changeSearchHandler = (
     e: React.SyntheticEvent<Element, Event>,
@@ -32,11 +50,26 @@ const GroupNav = (props: IGroupNavProps) => {
     setOpen(false);
   };
 
-  const searchSubmitHandler = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const searchSubmitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (group) {
-      props.onGetGroup(group);
+      // Joining group
+      try {
+        console.log(token);
+        const { data } = await axios.put<IGroup>(
+          `http://localhost:8080/api/v1/group/${group._id}/add`,
+          { userId: currentUser._id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        props.onGetGroup(data);
+      } catch (err: any) {
+        console.log(err.response.data);
+      }
     }
     setOpen(false);
     setValue(0);

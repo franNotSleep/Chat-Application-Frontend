@@ -85,7 +85,6 @@ const CreateGroup = (props: ICreateGroupProps) => {
           Authorization: `Bearer ${token}`,
         },
       };
-      console.log(input);
       const newGroup = await axios.post<IGroup>(
         "http://localhost:8080/api/v1/group/",
         input,

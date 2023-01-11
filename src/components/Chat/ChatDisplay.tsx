@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 
 import { IUser } from '../Group/CreateGroup';
 import ChatForm from './ChatForm';
-import Message from './Message';
+import Messages from './Messages';
 
 // Connect to socket
 const socket = io("http://localhost:8080");
@@ -25,7 +25,7 @@ export interface IGroupResponse {
   group: IGroup[];
 }
 
-interface IMessage {
+export interface IMessage {
   _id?: string;
   sender: string;
   content: string;
@@ -43,8 +43,9 @@ const ChatDisplay = (props: IChatDisplayProps) => {
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
-      await axios.post<IMessage>(
+      const { data } = await axios.post<IMessage>(
         `http://localhost:8080/api/v1/message/${props.selectedGroup?._id}/message`,
         newMessage,
         {
@@ -54,6 +55,9 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         }
       );
 
+      // Emit message to the server
+      // socket.emit("send-message", data);
+      setMessage([...message, data]);
       setNewMessage({
         sender: currentUser._id,
         content: "",
@@ -67,6 +71,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
     setNewMessage({
       sender: currentUser._id,
       content: e.target.value,
+      group: props.selectedGroup?._id,
     });
   };
 
@@ -95,8 +100,22 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   };
 
   useEffect(() => {
+    // Join Room
+    // socket.emit("join-room", props.selectedGroup?._id);
+    // Get message related to the group
     getMessage();
+    console.log(props.selectedGroup);
   }, [props.selectedGroup]);
+
+  // useEffect(() => {
+  //   socket.on("chat", (msg: IMessage) => {
+  //     if (props.selectedGroup?._id) {
+  //       if (msg.group === props.selectedGroup?._id) {
+  //         setMessage([...message, msg]);
+  //       }
+  //     }
+  //   });
+  // });
 
   return (
     <Box
@@ -118,15 +137,19 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         <Typography variant="h4" component="h2">
           {props.selectedGroup?.name}
         </Typography>
-        {message.map((msg) => (
-          <Message content={msg.content} key={msg._id} />
-        ))}
+        <Messages messages={message} />
       </Box>
-      <ChatForm
-        onSubmitHandler={submitHandler}
-        onChangeHandler={changeHandler}
-        content={newMessage ? newMessage.content : ""}
-      />
+      {props.selectedGroup ? (
+        <ChatForm
+          onSubmitHandler={submitHandler}
+          onChangeHandler={changeHandler}
+          content={newMessage ? newMessage.content : ""}
+        />
+      ) : (
+        <Typography variant="h4" component="h2">
+          Join Or Create Group
+        </Typography>
+      )}
     </Box>
   );
 };
