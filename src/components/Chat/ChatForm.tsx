@@ -1,5 +1,5 @@
 import SendIcon from '@mui/icons-material/Send';
-import { Box, Button, TextField } from '@mui/material';
+import { IconButton, InputBase, Paper } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -13,26 +13,25 @@ const ChatForm = (props: IChatFormProps) => {
   const navigate = useNavigate();
   return (
     <div>
-      <Box
+      <Paper
+        elevation={2}
+        variant="outlined"
         component="form"
         onSubmit={props.onSubmitHandler}
-        sx={{
-          display: "flex",
-          rowGap: "2",
-          margin: 2,
-        }}
+        sx={{ p: "0.5rem", display: "flex", alignItems: "center" }}
       >
-        <TextField
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
           fullWidth
-          variant="standard"
-          label="Message"
-        value={props.content}
+          inputProps={{ "aria-label": "Send Message" }}
+          placeholder="Send Message"
+          value={props.content}
           onChange={props.onChangeHandler}
         />
-        <Button variant="text" type="submit" endIcon={<SendIcon />}>
-          Send
-        </Button>
-      </Box>
+        <IconButton type="submit" sx={{ p: "10px" }}>
+          <SendIcon />
+        </IconButton>
+      </Paper>
     </div>
   );
 };

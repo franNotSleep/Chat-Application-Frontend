@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -19,6 +19,7 @@ export interface IGroup {
     _id: string;
   };
   participants: IUser[];
+  createdAt?: Date | string;
 }
 
 export interface IGroupResponse {
@@ -30,6 +31,7 @@ export interface IMessage {
   sender: string;
   content: string;
   group?: string;
+  createdAt?: Date | string;
 }
 
 interface IChatDisplayProps {
@@ -100,22 +102,10 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   };
 
   useEffect(() => {
-    // Join Room
-    // socket.emit("join-room", props.selectedGroup?._id);
     // Get message related to the group
     getMessage();
     console.log(props.selectedGroup);
   }, [props.selectedGroup]);
-
-  // useEffect(() => {
-  //   socket.on("chat", (msg: IMessage) => {
-  //     if (props.selectedGroup?._id) {
-  //       if (msg.group === props.selectedGroup?._id) {
-  //         setMessage([...message, msg]);
-  //       }
-  //     }
-  //   });
-  // });
 
   return (
     <Box
@@ -124,6 +114,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         width: 8 / 10,
         height: "80vh",
         background: "#fff",
+        border: "1px solid black",
       }}
     >
       <Box
@@ -137,8 +128,11 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         <Typography variant="h4" component="h2">
           {props.selectedGroup?.name}
         </Typography>
+        <Divider />
         <Messages messages={message} />
+        <Divider />
       </Box>
+
       {props.selectedGroup ? (
         <ChatForm
           onSubmitHandler={submitHandler}

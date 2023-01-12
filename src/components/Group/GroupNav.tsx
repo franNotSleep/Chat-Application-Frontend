@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import ChatIcon from '@mui/icons-material/Chat';
+import GroupsIcon from '@mui/icons-material/Groups';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -10,6 +11,7 @@ import { useNavigate } from 'react-router';
 
 import { IGroup } from '../Chat/ChatDisplay';
 import CreateGroup, { IUser } from './CreateGroup';
+import MyGroups from './MyGroups';
 import SearchGroup from './SearchGroup';
 
 interface IGroupNavProps {
@@ -54,21 +56,34 @@ const GroupNav = (props: IGroupNavProps) => {
     e.preventDefault();
 
     if (group) {
-      // Joining group
-      try {
-        console.log(token);
-        const { data } = await axios.put<IGroup>(
-          `http://localhost:8080/api/v1/group/${group._id}/add`,
-          { userId: currentUser._id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        props.onGetGroup(data);
-      } catch (err: any) {
-        console.log(err.response.data);
+      let userInGroup = false;
+      group.participants.map((participant) => {
+        if (participant._id === currentUser._id) {
+          return (userInGroup = true);
+        } else {
+          return false;
+        }
+      });
+      // if user is not already in the group, then join group
+      // else just return group
+      if (!userInGroup) {
+        try {
+          console.log(token);
+          const { data } = await axios.put<IGroup>(
+            `http://localhost:8080/api/v1/group/${group._id}/add`,
+            { userId: currentUser._id },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          props.onGetGroup(data);
+        } catch (err: any) {
+          console.log(err.response.data);
+        }
+      } else {
+        props.onGetGroup(group);
       }
     }
     setOpen(false);
@@ -95,6 +110,15 @@ const GroupNav = (props: IGroupNavProps) => {
           open={open}
           onSubmitHandler={searchSubmitHandler}
           onChangeSearch={changeSearchHandler}
+          handleClose={() => {
+            setOpen(false);
+          }}
+        />
+      ) : value == 3 ? (
+        <MyGroups
+          open={open}
+          onGetGroup={props.onGetGroup}
+          submitEffect={submitEffect}
           handleClose={() => {
             setOpen(false);
           }}
@@ -126,6 +150,13 @@ const GroupNav = (props: IGroupNavProps) => {
         <BottomNavigationAction
           label="Search Group"
           icon={<SearchIcon />}
+          onClick={() => {
+            setOpen(true);
+          }}
+        />
+        <BottomNavigationAction
+          label="My Groups"
+          icon={<GroupsIcon />}
           onClick={() => {
             setOpen(true);
           }}
