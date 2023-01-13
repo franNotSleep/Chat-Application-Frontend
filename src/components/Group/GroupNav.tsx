@@ -1,14 +1,14 @@
 import AddIcon from '@mui/icons-material/Add';
-import ChatIcon from '@mui/icons-material/Chat';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box } from '@mui/material';
+import { Avatar, Box } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import Profile from '../Auth/Profile';
 import { IGroup } from '../Chat/ChatDisplay';
 import CreateGroup, { IUser } from './CreateGroup';
 import MyGroups from './MyGroups';
@@ -123,6 +123,13 @@ const GroupNav = (props: IGroupNavProps) => {
             setOpen(false);
           }}
         />
+      ) : value == 0 ? (
+        <Profile
+          open={open}
+          handleClose={() => {
+            setOpen(false);
+          }}
+        />
       ) : (
         ""
       )}
@@ -139,7 +146,13 @@ const GroupNav = (props: IGroupNavProps) => {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction label="Chat" icon={<ChatIcon />} />
+        <BottomNavigationAction
+          label="Profile"
+          icon={<Avatar>{currentUser.name.slice(0, 2).toUpperCase()}</Avatar>}
+          onClick={() => {
+            setOpen(true);
+          }}
+        />
         <BottomNavigationAction
           label="Create Group"
           icon={<AddIcon />}
