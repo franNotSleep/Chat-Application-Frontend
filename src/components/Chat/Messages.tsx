@@ -1,4 +1,4 @@
-import { Box, Paper } from '@mui/material';
+import { Avatar, Box, Paper, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
@@ -32,8 +32,9 @@ const Messages = (props: IMessagesProps) => {
     >
       {props.messages.map((message) => (
         <Message
+          sender={message.sender}
           message={message}
-          self={currentUser._id === message.sender ? true : false}
+          self={currentUser._id === message.sender._id ? true : false}
           key={message._id}
         />
       ))}
@@ -44,21 +45,29 @@ const Messages = (props: IMessagesProps) => {
 interface IMessageProps {
   message: IMessage;
   self?: boolean;
+  sender: IUser;
 }
-const Message = (props: IMessageProps) => (
-  <Paper
-    elevation={3}
-    sx={{
-      width: "max-content",
-      height: 20,
-      padding: "0.5rem",
-      margin: 1,
-      background: props.self ? "#ebc9bb" : "#99826c",
-      alignSelf: props.self ? "flex-end" : "flex-start",
-    }}
-  >
-    {props.message.content}
-  </Paper>
-);
+const Message = (props: IMessageProps) => {
+  console.log(props.sender);
+  return (
+    <Paper
+      elevation={3}
+      sx={{
+        width: "max-content",
+        height: 20,
+        padding: "0.5rem",
+        margin: 1,
+        background: props.self ? "#ebc9bb" : "#99826c",
+        alignSelf: props.self ? "flex-end" : "flex-start",
+        borderRadius: "50px",
+        display: "flex",
+        textAlign: "center",
+      }}
+    >
+      <Avatar src={props.sender.avatar} />
+      <Typography>{props.message.content}</Typography>
+    </Paper>
+  );
+};
 
 export default Messages;

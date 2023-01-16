@@ -28,7 +28,7 @@ export interface IGroupResponse {
 
 export interface IMessage {
   _id?: string;
-  sender: string;
+  sender: IUser;
   content: string;
   group?: string;
   createdAt?: Date | string;
@@ -74,7 +74,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
       // socket.emit("send-message", data);
       setMessage([...message, data]);
       setNewMessage({
-        sender: currentUser._id,
+        sender: currentUser,
         content: "",
       });
     } catch (err: any) {
@@ -84,7 +84,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage({
-      sender: currentUser._id,
+      sender: currentUser,
       content: e.target.value,
       group: props.selectedGroup?._id,
     });
@@ -113,7 +113,6 @@ const ChatDisplay = (props: IChatDisplayProps) => {
     }
   };
 
-  
   // Get all message related to selected group
   const getMessage = async () => {
     const { data } = await axios.get<IMessage[]>(
