@@ -58,6 +58,7 @@ const CreateGroup = (props: ICreateGroupProps) => {
   try {
     if (JSON.parse(localStorage.getItem("user") || "").token) {
       token = JSON.parse(localStorage.getItem("user") || "").token;
+      adminId = JSON.parse(localStorage.getItem("user") || "")._id;
     } else {
       navigate("/");
     }
@@ -79,6 +80,7 @@ const CreateGroup = (props: ICreateGroupProps) => {
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Creating group
+    console.log(input);
     try {
       const requestConfig = {
         headers: {

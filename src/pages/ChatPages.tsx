@@ -16,6 +16,10 @@ const ChatPages = () => {
     setGroup(_group);
   };
 
+  const cleanGroup = () => {
+    setGroup(undefined);
+  };
+
   useEffect(() => {
     if (typeof localStorage.getItem("user") !== "string") {
       navigate("/");
@@ -37,7 +41,7 @@ const ChatPages = () => {
       >
         <GroupNav onGetGroup={getGroup} />
       </Box>
-      <ChatDisplay selectedGroup={group} />
+      <ChatDisplay cleanGroup={cleanGroup} selectedGroup={group} />
     </Container>
   );
 };

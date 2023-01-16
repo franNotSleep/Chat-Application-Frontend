@@ -34,9 +34,11 @@ const GroupNav = (props: IGroupNavProps) => {
       currentUser = JSON.parse(localStorage.getItem("user") || "");
     } else {
       navigate("/");
+      return;
     }
   } catch (err) {
     navigate("/");
+    return;
   }
 
   const changeSearchHandler = (
@@ -68,7 +70,6 @@ const GroupNav = (props: IGroupNavProps) => {
       // else just return group
       if (!userInGroup) {
         try {
-          console.log(token);
           const { data } = await axios.put<IGroup>(
             `http://localhost:8080/api/v1/group/${group._id}/add`,
             { userId: currentUser._id },

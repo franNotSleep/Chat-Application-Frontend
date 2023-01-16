@@ -65,8 +65,6 @@ const MyGroups = (props: IMyGroupsProps) => {
     getGroups();
   }, []);
 
-  console.log(myGroups);
-
   return (
     <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>

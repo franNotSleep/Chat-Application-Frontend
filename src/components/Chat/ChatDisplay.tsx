@@ -1,4 +1,4 @@
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -36,12 +36,25 @@ export interface IMessage {
 
 interface IChatDisplayProps {
   selectedGroup: IGroup | undefined;
+  cleanGroup: () => void;
 }
 
 const ChatDisplay = (props: IChatDisplayProps) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<IMessage>();
+
+  // Get token
+  // if not token, return to home page
+  // if not find user, return to home page
+  let token!: string;
+  let currentUser!: IUser;
+  try {
+    token = JSON.parse(localStorage.getItem("user") || "").token;
+    currentUser = JSON.parse(localStorage.getItem("user") || "");
+  } catch (err) {
+    navigate("/");
+  }
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,17 +90,30 @@ const ChatDisplay = (props: IChatDisplayProps) => {
     });
   };
 
-  // Get token
-  // if not token, return to home page
-  // if not find user, return to home page
-  let token!: string;
-  let currentUser!: IUser;
-  try {
-    token = JSON.parse(localStorage.getItem("user") || "").token;
-    currentUser = JSON.parse(localStorage.getItem("user") || "");
-  } catch (err) {
-    navigate("/");
-  }
+  // Leave group
+  const leaveGroup = async () => {
+    try {
+      // leaving group
+      if (currentUser._id === props.selectedGroup?.admin._id) {
+        // send an alert
+        return;
+      }
+      const { data } = await axios.put(
+        `http://localhost:8080/api/v1/group/${props.selectedGroup?._id}/leave`,
+        { userId: currentUser._id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      props.cleanGroup();
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  };
+
+  
   // Get all message related to selected group
   const getMessage = async () => {
     const { data } = await axios.get<IMessage[]>(
@@ -122,15 +148,36 @@ const ChatDisplay = (props: IChatDisplayProps) => {
           height: "70vh",
           margin: "0 auto",
           width: 1 / 1,
-          position: "relative",
         }}
       >
-        <Typography variant="h4" component="h2">
-          {props.selectedGroup?.name}
-        </Typography>
+        {/* If there is a group */}
+        {props.selectedGroup && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              textAlign: "center",
+            }}
+          >
+            {/* Group name */}
+            <Typography variant="h4" component="h2">
+              {props.selectedGroup?.name}
+            </Typography>
+            <Divider orientation="vertical" />
+            {/* Leave group button */}
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => leaveGroup()}
+            >
+              Leave Group
+            </Button>
+          </Box>
+        )}
         <Divider />
         <Messages messages={message} />
-        <Divider />
       </Box>
 
       {props.selectedGroup ? (
