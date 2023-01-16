@@ -79,7 +79,6 @@ const Profile = (props: IProfileProps) => {
   };
 
   const editHandler = async () => {
-    console.log("editing");
     const {
       data: { user, success },
     } = await axios.put<IEditResponse>(
@@ -113,8 +112,7 @@ const Profile = (props: IProfileProps) => {
         <Card sx={{ maxWidth: 345 }}>
           <CardContent>
             {/* Return the first to letter of the current user name */}
-            <Avatar>{input.name.slice(0, 2).toUpperCase()}</Avatar>
-
+            <Avatar src={currentUser.avatar} />
             {/* If editing is true, transform the label to inputs */}
             {!editing ? (
               <Typography gutterBottom variant="h5" component="div">

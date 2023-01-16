@@ -30,6 +30,7 @@ interface ICreateGroupProps {
 export interface IUser {
   name: string;
   email: string;
+  avatar: string;
   _id: string;
 }
 
@@ -163,6 +164,7 @@ const ParticipantsField = (props: ParticipantsFieldProps) => {
     {
       name: "",
       email: "",
+      avatar: "",
       _id: "",
     },
   ]);

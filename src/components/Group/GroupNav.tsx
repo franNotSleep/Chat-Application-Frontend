@@ -149,7 +149,7 @@ const GroupNav = (props: IGroupNavProps) => {
       >
         <BottomNavigationAction
           label="Profile"
-          icon={<Avatar>{currentUser.name.slice(0, 2).toUpperCase()}</Avatar>}
+          icon={<Avatar src={currentUser.avatar} />}
           onClick={() => {
             setOpen(true);
           }}
