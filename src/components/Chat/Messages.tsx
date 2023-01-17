@@ -28,6 +28,7 @@ const Messages = (props: IMessagesProps) => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        padding: "1rem",
       }}
     >
       {props.messages.map((message) => (

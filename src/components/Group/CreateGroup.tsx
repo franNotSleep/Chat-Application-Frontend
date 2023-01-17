@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { IGroup } from '../Chat/ChatDisplay';
 
 const style = {
-  position: "absolute" as "absolute",
+  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -113,33 +113,31 @@ const CreateGroup = (props: ICreateGroupProps) => {
   });
 
   return (
-    <div>
-      <Modal open={props.open} onClose={props.handleClose}>
-        <Box sx={style} component="form" onSubmit={submitHandler}>
-          <Typography variant="h6" component="h2">
-            Create Modal
-          </Typography>
-          <TextField
-            fullWidth
-            variant="standard"
-            label="Group Name"
-            onChange={(e) => {
-              setInput({
-                ...input,
-                name: e.target.value,
-              });
-            }}
-          />
-          <ParticipantsField
-            onChangeUserIdHandler={changeUserIdHandler}
-            token={token}
-          />
-          <Fab color="primary" type="submit" aria-label="add">
-            <AddIcon />
-          </Fab>
-        </Box>
-      </Modal>
-    </div>
+    <Modal open={props.open} onClose={props.handleClose}>
+      <Box sx={style} component="form" onSubmit={submitHandler}>
+        <Typography variant="h6" component="h2">
+          Create Modal
+        </Typography>
+        <TextField
+          fullWidth
+          variant="standard"
+          label="Group Name"
+          onChange={(e) => {
+            setInput({
+              ...input,
+              name: e.target.value,
+            });
+          }}
+        />
+        <ParticipantsField
+          onChangeUserIdHandler={changeUserIdHandler}
+          token={token}
+        />
+        <Fab color="primary" type="submit" aria-label="add">
+          <AddIcon />
+        </Fab>
+      </Box>
+    </Modal>
   );
 };
 

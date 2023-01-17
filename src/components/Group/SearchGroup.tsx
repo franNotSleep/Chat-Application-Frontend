@@ -67,41 +67,53 @@ const SearchGroup = (props: ISearchGroupProps) => {
   };
 
   return (
-    <div>
-      <Modal open={props.open} onClose={props.handleClose}>
-        <Box sx={style} component="form" onSubmit={props.onSubmitHandler}>
-          <Autocomplete
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            disableClearable
-            getOptionLabel={(option) => option.name}
-            onChange={props.onChangeSearch}
-            options={groups}
-            sx={{ width: 300 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Search group"
-                onChange={changeHandler}
-                name="Search Group"
-                variant="standard"
-                InputProps={{
-                  ...params.InputProps,
-                  type: "search",
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
-          />
-          <Button variant="text" type="submit" endIcon={<Diversity3Icon />}>
-            JOIN
-          </Button>
-        </Box>
-      </Modal>
-    </div>
+    <Modal open={props.open} onClose={props.handleClose}>
+      <Box
+        sx={{
+          position: "absolute" as "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: {sx: 200, md: 300, lg: 400},
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+        }}
+        component="form"
+        onSubmit={props.onSubmitHandler}
+      >
+        <Autocomplete
+          isOptionEqualToValue={(option, value) => option._id === value._id}
+          disableClearable
+          getOptionLabel={(option) => option.name}
+          onChange={props.onChangeSearch}
+          options={groups}
+          sx={{ width: 300 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Search group"
+              onChange={changeHandler}
+              name="Search Group"
+              variant="standard"
+              InputProps={{
+                ...params.InputProps,
+                type: "search",
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
+        <Button variant="text" type="submit" endIcon={<Diversity3Icon />}>
+          JOIN
+        </Button>
+      </Box>
+    </Modal>
   );
 };
 

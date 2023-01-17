@@ -176,7 +176,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
           </Box>
         )}
         <Divider />
-        <Messages messages={message} />
+        {props.selectedGroup && <Messages messages={message} />}
       </Box>
 
       {props.selectedGroup ? (
