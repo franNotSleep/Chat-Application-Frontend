@@ -24,7 +24,6 @@ const AuthNavBar = (props: AuthNavBarProps) => {
   return (
     <Box
       sx={{
-        display: "flex",
         margin: "auto",
         justifyContent: "center",
         alignItems: "center",

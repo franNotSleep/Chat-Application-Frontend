@@ -34,11 +34,11 @@ const GroupNav = (props: IGroupNavProps) => {
       currentUser = JSON.parse(localStorage.getItem("user") || "");
     } else {
       navigate("/");
-      return;
+      return null;
     }
   } catch (err) {
     navigate("/");
-    return;
+    return null;
   }
 
   const changeSearchHandler = (

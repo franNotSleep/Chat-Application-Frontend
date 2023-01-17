@@ -1,10 +1,8 @@
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import LoginIcon from '@mui/icons-material/Login';
-import { InputAdornment } from '@mui/material';
+import { Button, InputAdornment } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -53,20 +51,18 @@ const Login = () => {
       onSubmit={submitHandler}
       component="form"
       sx={{
-        width: 300,
-        height: 300,
-        display: "flex",
-        flexDirection: "column",
-        padding: 5,
-        rowGap: 4,
+        mt: 1,
       }}
     >
       {!error.success ? <Alert severity="error">{error.error}</Alert> : ""}
       <TextField
+        margin="normal"
         label="Email"
-        variant="outlined"
+        variant="standard"
         name="email"
+        required
         value={input.email}
+        fullWidth
         onChange={changeHandler}
         InputProps={{
           startAdornment: (
@@ -77,11 +73,14 @@ const Login = () => {
         }}
       />
       <TextField
+        fullWidth
+        margin="normal"
+        required
         label="Password"
         onChange={changeHandler}
         value={input.password}
         name="password"
-        variant="outlined"
+        variant="standard"
         type="password"
         InputProps={{
           startAdornment: (
@@ -91,10 +90,9 @@ const Login = () => {
           ),
         }}
       />
-      <Fab variant="extended" type="submit">
-        <LoginIcon sx={{ mr: 2 }} />
-        Login
-      </Fab>
+      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        Log In
+      </Button>
     </Box>
   );
 };

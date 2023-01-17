@@ -1,14 +1,13 @@
-.app__authForm {
-  background: #fff;
-  display: flex;
-  flex-direction: row;
-  width: 50%;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-  border-radius: 20px;
+.lottie-sm {
+  display: none;
 }
-.app__authForm-img img {
-  width: 100%;
-  height: 100%;
+
+/* small device */
+@media (max-width: 650px) {
+  .lottie-md {
+    display: none;
+  }
+  .lottie-sm {
+    display: block;
+  }
 }

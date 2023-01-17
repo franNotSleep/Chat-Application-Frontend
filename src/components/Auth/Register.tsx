@@ -1,11 +1,9 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { InputAdornment } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import { Button, InputAdornment } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -48,40 +46,33 @@ const Register = () => {
     }
   };
   return (
-    <Box
-      method="post"
-      onSubmit={submitHandler}
-      component="form"
-      className="app__authForm-register"
-      sx={{
-        width: 300,
-        height: 300,
-        display: "flex",
-        flexDirection: "column",
-        padding: 5,
-        rowGap: 2,
-      }}
-    >
+    <Box method="post" onSubmit={submitHandler} component="form" sx={{ mt: 1 }}>
       {!error.success ? <Alert severity="error">{error.error}</Alert> : ""}
 
       <TextField
+        margin="normal"
         label="Name"
         variant="standard"
         name="name"
+        fullWidth
+        required
         value={input.name}
         onChange={changeHandler}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <AccountCircleIcon />
+              <PersonIcon />
             </InputAdornment>
           ),
         }}
       />
       <TextField
+        margin="normal"
         label="Email"
         variant="standard"
         name="email"
+        required
+        fullWidth
         value={input.email}
         onChange={changeHandler}
         InputProps={{
@@ -93,9 +84,12 @@ const Register = () => {
         }}
       />
       <TextField
+        margin="normal"
         label="Password"
         variant="standard"
         type="password"
+        required
+        fullWidth
         name="password"
         value={input.password}
         onChange={changeHandler}
@@ -107,10 +101,9 @@ const Register = () => {
           ),
         }}
       />
-      <Fab type="submit" variant="extended">
-        <AppRegistrationIcon sx={{ mr: 2 }} />
+      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         Sign Up
-      </Fab>
+      </Button>
     </Box>
   );
 };
