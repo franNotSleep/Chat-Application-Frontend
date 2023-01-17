@@ -64,7 +64,7 @@ const Login = () => {
       {!error.success ? <Alert severity="error">{error.error}</Alert> : ""}
       <TextField
         label="Email"
-        variant="standard"
+        variant="outlined"
         name="email"
         value={input.email}
         onChange={changeHandler}
@@ -81,7 +81,7 @@ const Login = () => {
         onChange={changeHandler}
         value={input.password}
         name="password"
-        variant="filled"
+        variant="outlined"
         type="password"
         InputProps={{
           startAdornment: (
