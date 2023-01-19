@@ -1,17 +1,19 @@
 import AddIcon from '@mui/icons-material/Add';
 import GroupsIcon from '@mui/icons-material/Groups';
+import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import {
-    Avatar,
-    Box,
-    Button,
-    Drawer,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
+  Avatar,
+  Box,
+  CssBaseline,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -19,6 +21,11 @@ import { IUser } from './CreateGroup';
 
 type Anchor = "left";
 export type Value = 0 | 1 | 2 | 3 | null;
+interface IList {
+  text: string;
+  icon: JSX.Element;
+  value: Value;
+}
 
 interface IGroupMenuProps {
   currentUser: IUser;
@@ -29,6 +36,12 @@ interface IGroupMenuProps {
 const GroupMenu = (props: IGroupMenuProps) => {
   const [openMenu, setOpenMenu] = React.useState(false);
   // this value is going to be used by the GroupNav components for represent
+
+  const textAndIcon: IList[] = [
+    { text: "Create Group", icon: <AddIcon />, value: 1 },
+    { text: "Search Group", icon: <SearchIcon />, value: 2 },
+    { text: "My Groups", icon: <GroupsIcon />, value: 3 },
+  ];
 
   const clickSetValueHandler = (newVal: Value) => {
     props.setValue(newVal);
@@ -52,7 +65,6 @@ const GroupMenu = (props: IGroupMenuProps) => {
   const list = (anchor: Anchor) => (
     <Box
       sx={{ width: 250, background: "#6d1b7b", height: 1 / 1 }}
-      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
@@ -66,32 +78,18 @@ const GroupMenu = (props: IGroupMenuProps) => {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => clickSetValueHandler(1)}>
-          <ListItemButton>
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Create Group"} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding onClick={() => clickSetValueHandler(2)}>
-          <ListItemButton>
-            <ListItemIcon>
-              <SearchIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Search Group"} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding onClick={() => clickSetValueHandler(3)}>
-          <ListItemButton>
-            <ListItemIcon>
-              <GroupsIcon />
-            </ListItemIcon>
-            <ListItemText primary={"My Groups"} />
-          </ListItemButton>
-        </ListItem>
+        {textAndIcon.map(({ text, icon, value }) => (
+          <ListItem
+            key={text}
+            disablePadding
+            onClick={() => clickSetValueHandler(value)}
+          >
+            <ListItemButton>
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
     </Box>
   );
@@ -99,7 +97,16 @@ const GroupMenu = (props: IGroupMenuProps) => {
   return (
     <div>
       {/* Menu for small devices */}
-      <Button onClick={toggleDrawer("left", true)}>LEFT</Button>
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        sx={{ mr: 2 }}
+        onClick={toggleDrawer("left", true)}
+      >
+        <MenuIcon />
+      </IconButton>
       <Drawer
         sx={{
           display: { xs: "block", sm: "none" },
@@ -110,6 +117,8 @@ const GroupMenu = (props: IGroupMenuProps) => {
         elevation={6}
         onClose={toggleDrawer("left", false)}
       >
+        <CssBaseline />
+
         {list("left")}
       </Drawer>
 
@@ -124,6 +133,8 @@ const GroupMenu = (props: IGroupMenuProps) => {
         elevation={6}
         onClose={toggleDrawer("left", false)}
       >
+        <CssBaseline />
+
         {list("left")}
       </Drawer>
     </div>

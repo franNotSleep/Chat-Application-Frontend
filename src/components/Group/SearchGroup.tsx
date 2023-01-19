@@ -1,6 +1,5 @@
 import Diversity3Icon from '@mui/icons-material/Diversity3';
-import Search from '@mui/icons-material/Search';
-import { Autocomplete, Box, Button, InputAdornment, Modal, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, Modal, TextField } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -74,9 +73,8 @@ const SearchGroup = (props: ISearchGroupProps) => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: {sx: 200, md: 300, lg: 400},
+          width: { xs: "300px", sm: "500px", lg: "650px" },
           bgcolor: "background.paper",
-          border: "2px solid #000",
           boxShadow: 24,
           p: 4,
         }}
@@ -89,23 +87,15 @@ const SearchGroup = (props: ISearchGroupProps) => {
           getOptionLabel={(option) => option.name}
           onChange={props.onChangeSearch}
           options={groups}
-          sx={{ width: 300 }}
           renderInput={(params) => (
             <TextField
+              fullWidth
+              margin="normal"
               {...params}
               label="Search group"
               onChange={changeHandler}
               name="Search Group"
-              variant="standard"
-              InputProps={{
-                ...params.InputProps,
-                type: "search",
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
+              variant="outlined"
             />
           )}
         />

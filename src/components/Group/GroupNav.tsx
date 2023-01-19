@@ -1,9 +1,4 @@
-import AddIcon from '@mui/icons-material/Add';
-import GroupsIcon from '@mui/icons-material/Groups';
-import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Paper } from '@mui/material';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Box from '@mui/material/Box';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -92,12 +87,11 @@ const GroupNav = (props: IGroupNavProps) => {
     setValue(0);
   };
 
-  console.log(`Val: ${value}`);
   return (
-    <Paper
-      elevation={6}
+    <Box
       sx={{
         height: 1 / 1,
+        background: "#6d1b7b",
       }}
     >
       <GroupMenu
@@ -142,62 +136,7 @@ const GroupNav = (props: IGroupNavProps) => {
       ) : (
         ""
       )}
-      <BottomNavigation
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: 1 / 1,
-          color: "#fff",
-          background: "#6d1b7b",
-        }}
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-      >
-        <BottomNavigationAction
-          label="Profile"
-          icon={<Avatar src={currentUser.avatar} />}
-          onClick={() => {
-            setOpen(true);
-          }}
-          sx={{
-            color: "#fff",
-          }}
-        />
-        <BottomNavigationAction
-          sx={{
-            color: "#fff",
-          }}
-          label="Create Group"
-          icon={<AddIcon />}
-          onClick={() => {
-            setOpen(true);
-          }}
-        />
-        <BottomNavigationAction
-          label="Search Group"
-          icon={<SearchIcon />}
-          onClick={() => {
-            setOpen(true);
-          }}
-          sx={{
-            color: "#fff",
-          }}
-        />
-        <BottomNavigationAction
-          label="My Groups"
-          icon={<GroupsIcon />}
-          onClick={() => {
-            setOpen(true);
-          }}
-          sx={{
-            color: "#fff",
-          }}
-        />
-      </BottomNavigation>
-    </Paper>
+    </Box>
   );
 };
 

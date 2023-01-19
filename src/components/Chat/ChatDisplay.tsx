@@ -138,16 +138,19 @@ const ChatDisplay = (props: IChatDisplayProps) => {
     <Box
       sx={{
         padding: "2rem",
-        height: "80vh",
         background: "#70C3FF",
+        border: "2px solid green",
+        height: 1 / 1,
       }}
     >
+      {/* Chat Start */}
       <Box
         sx={{
           height: "70vh",
           margin: "0 auto",
           width: 1 / 1,
           position: "relative",
+          border: "2px solid red",
         }}
       >
         {/* if not group selected */}
@@ -172,13 +175,12 @@ const ChatDisplay = (props: IChatDisplayProps) => {
               animationData={chatAnimation}
               loop={true}
               style={{
-                width: "100px",
+                width: "70px",
                 height: "100px",
+                margin: "0 auto",
               }}
             />
-            <Typography component="p" variant="h6">
-              Create or Join Group Chat🤓
-            </Typography>
+            No Group Selected
           </Paper>
         )}
 
@@ -210,6 +212,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         )}
         {props.selectedGroup && <Messages messages={message} />}
       </Box>
+      {/* Chat End */}
 
       {props.selectedGroup && (
         <ChatForm

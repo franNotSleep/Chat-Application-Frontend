@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Autocomplete, Box, Checkbox, Fab, Modal, TextField, Typography } from '@mui/material';
+import { Autocomplete, Checkbox, Fab, Modal, Paper, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -13,11 +13,10 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  width: { xs: "300px", sm: "500px", lg: "650px" },
 };
 
 interface ICreateGroupProps {
@@ -114,13 +113,14 @@ const CreateGroup = (props: ICreateGroupProps) => {
 
   return (
     <Modal open={props.open} onClose={props.handleClose}>
-      <Box sx={style} component="form" onSubmit={submitHandler}>
+      <Paper sx={style} elevation={6} component="form" onSubmit={submitHandler}>
         <Typography variant="h6" component="h2">
           Create Modal
         </Typography>
         <TextField
+          margin="normal"
           fullWidth
-          variant="standard"
+          variant="outlined"
           label="Group Name"
           onChange={(e) => {
             setInput({
@@ -136,7 +136,7 @@ const CreateGroup = (props: ICreateGroupProps) => {
         <Fab color="primary" type="submit" aria-label="add">
           <AddIcon />
         </Fab>
-      </Box>
+      </Paper>
     </Modal>
   );
 };
@@ -211,6 +211,7 @@ const ParticipantsField = (props: ParticipantsFieldProps) => {
       )}
       renderInput={(params) => (
         <TextField
+          margin="normal"
           {...params}
           label="Participants"
           placeholder="Participants"
