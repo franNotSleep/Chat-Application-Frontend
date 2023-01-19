@@ -1,7 +1,5 @@
-import EmailIcon from '@mui/icons-material/Email';
-import LockIcon from '@mui/icons-material/Lock';
-import PersonIcon from '@mui/icons-material/Person';
-import { Button, InputAdornment } from '@mui/material';
+import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
+import { Button } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -52,56 +50,41 @@ const Register = () => {
       <TextField
         margin="normal"
         label="Name"
-        variant="standard"
+        variant="outlined"
         name="name"
         fullWidth
         required
         value={input.name}
         onChange={changeHandler}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <PersonIcon />
-            </InputAdornment>
-          ),
-        }}
       />
       <TextField
         margin="normal"
         label="Email"
-        variant="standard"
+        variant="outlined"
         name="email"
         required
         fullWidth
         value={input.email}
         onChange={changeHandler}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <EmailIcon />
-            </InputAdornment>
-          ),
-        }}
       />
       <TextField
         margin="normal"
         label="Password"
-        variant="standard"
+        variant="outlined"
         type="password"
         required
         fullWidth
         name="password"
         value={input.password}
         onChange={changeHandler}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <LockIcon />
-            </InputAdornment>
-          ),
-        }}
       />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        endIcon={<PublicRoundedIcon color="action" />}
+        sx={{ mt: 3, mb: 2, borderRadius: "10px" }}
+      >
         Sign Up
       </Button>
     </Box>

@@ -1,12 +1,27 @@
 import './style.css';
 
-import { Box } from '@mui/material';
-import Container from '@mui/material/Container/Container';
+import { Grid } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ChatDisplay, { IGroup } from '../components/Chat/ChatDisplay';
 import GroupNav from '../components/Group/GroupNav';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#70C3FF",
+    },
+    secondary: {
+      main: "#f44336",
+    },
+  },
+  typography: {
+    fontFamily: "Outfit",
+    fontSize: 19,
+  },
+});
 
 const ChatPages = () => {
   const navigate = useNavigate();
@@ -27,22 +42,16 @@ const ChatPages = () => {
   });
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: "flex",
-        justifyContent: "flex-end",
-      }}
-    >
-      <Box
-        sx={{
-          background: "#2cf",
-        }}
-      >
-        <GroupNav onGetGroup={getGroup} />
-      </Box>
-      <ChatDisplay cleanGroup={cleanGroup} selectedGroup={group} />
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Grid container>
+        <Grid item xs={2} sm={2} md={1}>
+          <GroupNav onGetGroup={getGroup} />
+        </Grid>
+        <Grid item xs={10} sm={10} md={11}>
+          <ChatDisplay cleanGroup={cleanGroup} selectedGroup={group} />
+        </Grid>
+      </Grid>
+    </ThemeProvider>
   );
 };
 

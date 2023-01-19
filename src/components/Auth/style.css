@@ -3,7 +3,7 @@
 }
 
 /* small device */
-@media (max-width: 650px) {
+@media (max-width: 599px) {
   .lottie-md {
     display: none;
   }

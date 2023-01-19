@@ -1,6 +1,6 @@
 import './style.css';
 
-import { Box, CssBaseline, Grid, Paper } from '@mui/material';
+import { Box, CssBaseline, Grid, Link, Paper, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Lottie from 'lottie-react';
 import React, { useEffect, useState } from 'react';
@@ -11,7 +11,16 @@ import AuthNavBar from './AuthNavBar';
 import Login from './Login';
 import Register from './Register';
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#70C3FF",
+    },
+    secondary: {
+      main: "#f44336",
+    },
+  },
+});
 
 const AuthForm = () => {
   // if user exist redirect to /chat route
@@ -45,7 +54,7 @@ const AuthForm = () => {
           sm={4}
           md={7}
           sx={{
-            background: "blue",
+            background: "#70C3FF",
           }}
         >
           <Lottie
@@ -68,11 +77,19 @@ const AuthForm = () => {
             <Lottie
               animationData={earthRotate}
               loop={true}
-              style={{ height: "200px", width: "200px" }}
+              style={{ height: "73px", width: "73px" }}
               className="lottie-sm"
             />
             <AuthNavBar setNewVal={setNewVal} />
             {val ? <Login /> : <Register />}
+            <Typography variant="body2" color="text.secondary" align="center">
+              {"Copyright © "}
+              <Link color="inherit" href="http://localhost:5173/">
+                Charap
+              </Link>{" "}
+              {new Date().getFullYear()}
+              {"."}
+            </Typography>
           </Box>
         </Grid>
       </Grid>

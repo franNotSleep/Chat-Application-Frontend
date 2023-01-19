@@ -1,6 +1,5 @@
-import EmailIcon from '@mui/icons-material/Email';
-import LockIcon from '@mui/icons-material/Lock';
-import { Button, InputAdornment } from '@mui/material';
+import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
+import { Button } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -32,6 +31,7 @@ const Login = () => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(input);
     try {
       const { data } = await axios.post<GetToken>(
         "http://localhost:8080/api/v1/auth/login",
@@ -58,19 +58,12 @@ const Login = () => {
       <TextField
         margin="normal"
         label="Email"
-        variant="standard"
+        variant="outlined"
         name="email"
         required
         value={input.email}
         fullWidth
         onChange={changeHandler}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <EmailIcon />
-            </InputAdornment>
-          ),
-        }}
       />
       <TextField
         fullWidth
@@ -80,17 +73,17 @@ const Login = () => {
         onChange={changeHandler}
         value={input.password}
         name="password"
-        variant="standard"
+        variant="outlined"
         type="password"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <LockIcon />
-            </InputAdornment>
-          ),
-        }}
       />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2, borderRadius: "20px" }}
+        endIcon={<PublicRoundedIcon color="action" />}
+      >
         Log In
       </Button>
     </Box>

@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Paper } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import axios from 'axios';
@@ -92,7 +92,8 @@ const GroupNav = (props: IGroupNavProps) => {
   };
 
   return (
-    <Box
+    <Paper
+      elevation={6}
       sx={{
         height: 1 / 1,
       }}
@@ -138,8 +139,9 @@ const GroupNav = (props: IGroupNavProps) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          background: "red",
           height: 1 / 1,
+          color: "#fff",
+          background: "#6d1b7b",
         }}
         showLabels
         value={value}
@@ -153,8 +155,14 @@ const GroupNav = (props: IGroupNavProps) => {
           onClick={() => {
             setOpen(true);
           }}
+          sx={{
+            color: "#fff",
+          }}
         />
         <BottomNavigationAction
+          sx={{
+            color: "#fff",
+          }}
           label="Create Group"
           icon={<AddIcon />}
           onClick={() => {
@@ -167,6 +175,9 @@ const GroupNav = (props: IGroupNavProps) => {
           onClick={() => {
             setOpen(true);
           }}
+          sx={{
+            color: "#fff",
+          }}
         />
         <BottomNavigationAction
           label="My Groups"
@@ -174,9 +185,12 @@ const GroupNav = (props: IGroupNavProps) => {
           onClick={() => {
             setOpen(true);
           }}
+          sx={{
+            color: "#fff",
+          }}
         />
       </BottomNavigation>
-    </Box>
+    </Paper>
   );
 };
 

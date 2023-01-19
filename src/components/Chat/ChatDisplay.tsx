@@ -1,9 +1,12 @@
 import { Box, Button, Divider, Typography } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import axios from 'axios';
+import Lottie from 'lottie-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { io } from 'socket.io-client';
 
+import chatAnimation from '../../assets/chatAnimation.json';
 import { IUser } from '../Group/CreateGroup';
 import ChatForm from './ChatForm';
 import Messages from './Messages';
@@ -129,17 +132,14 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   useEffect(() => {
     // Get message related to the group
     getMessage();
-    console.log(props.selectedGroup);
   }, [props.selectedGroup]);
 
   return (
     <Box
       sx={{
         padding: "2rem",
-        width: 8 / 10,
         height: "80vh",
-        background: "#fff",
-        border: "1px solid black",
+        background: "#70C3FF",
       }}
     >
       <Box
@@ -147,8 +147,41 @@ const ChatDisplay = (props: IChatDisplayProps) => {
           height: "70vh",
           margin: "0 auto",
           width: 1 / 1,
+          position: "relative",
         }}
       >
+        {/* if not group selected */}
+        {!props.selectedGroup && (
+          <Paper
+            elevation={6}
+            sx={{
+              width: 1 / 2,
+              height: 1 / 2,
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              color: "#fff",
+              background:
+                "rgb(112,195,255) radial-gradient(circle, rgba(112,195,255,1) 30%, rgba(109,27,123,1) 97%)",
+              textAlign: "center",
+              padding: "20px",
+            }}
+          >
+            <Lottie
+              animationData={chatAnimation}
+              loop={true}
+              style={{
+                width: "100px",
+                height: "100px",
+              }}
+            />
+            <Typography component="p" variant="h6">
+              Create or Join Group Chat🤓
+            </Typography>
+          </Paper>
+        )}
+
         {/* If there is a group */}
         {props.selectedGroup && (
           <Box
@@ -175,20 +208,15 @@ const ChatDisplay = (props: IChatDisplayProps) => {
             </Button>
           </Box>
         )}
-        <Divider />
         {props.selectedGroup && <Messages messages={message} />}
       </Box>
 
-      {props.selectedGroup ? (
+      {props.selectedGroup && (
         <ChatForm
           onSubmitHandler={submitHandler}
           onChangeHandler={changeHandler}
           content={newMessage ? newMessage.content : ""}
         />
-      ) : (
-        <Typography variant="h4" component="h2">
-          Join Or Create Group
-        </Typography>
       )}
     </Box>
   );
