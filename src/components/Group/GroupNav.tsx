@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import Profile from '../Auth/Profile';
 import { IGroup } from '../Chat/ChatDisplay';
 import CreateGroup, { IUser } from './CreateGroup';
+import GroupMenu, { Value } from './GroupMenu';
 import MyGroups from './MyGroups';
 import SearchGroup from './SearchGroup';
 
@@ -20,7 +21,7 @@ interface IGroupNavProps {
 
 const GroupNav = (props: IGroupNavProps) => {
   const navigate = useNavigate();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState<Value>(null);
   const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
 
@@ -91,6 +92,7 @@ const GroupNav = (props: IGroupNavProps) => {
     setValue(0);
   };
 
+  console.log(`Val: ${value}`);
   return (
     <Paper
       elevation={6}
@@ -98,6 +100,11 @@ const GroupNav = (props: IGroupNavProps) => {
         height: 1 / 1,
       }}
     >
+      <GroupMenu
+        currentUser={currentUser}
+        setValue={setValue}
+        setOpen={setOpen}
+      />
       {value == 1 ? (
         <CreateGroup
           open={open}

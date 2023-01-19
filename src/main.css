@@ -1,7 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Roboto&display=swap");
 
-.app {
-  font-family: "Outfit";
+body {
   text-align: center;
-  padding: 2rem;
 }

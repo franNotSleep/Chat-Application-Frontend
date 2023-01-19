@@ -19,7 +19,6 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Outfit",
-    fontSize: 19,
   },
 });
 
@@ -44,7 +43,7 @@ const ChatPages = () => {
   return (
     <ThemeProvider theme={theme}>
       <Grid container>
-        <Grid item xs={2} sm={2} md={1}>
+        <Grid item xs={2} sm={2} md={1} sx={{}}>
           <GroupNav onGetGroup={getGroup} />
         </Grid>
         <Grid item xs={10} sm={10} md={11}>
