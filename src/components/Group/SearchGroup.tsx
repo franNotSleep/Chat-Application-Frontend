@@ -89,7 +89,6 @@ const SearchGroup = (props: ISearchGroupProps) => {
           options={groups}
           renderInput={(params) => (
             <TextField
-              fullWidth
               margin="normal"
               {...params}
               label="Search group"

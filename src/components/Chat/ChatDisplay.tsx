@@ -1,14 +1,13 @@
-import { Box, Button, Divider, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import { Box, CssBaseline } from '@mui/material';
 import axios from 'axios';
-import Lottie from 'lottie-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { io } from 'socket.io-client';
 
-import chatAnimation from '../../assets/chatAnimation.json';
 import { IUser } from '../Group/CreateGroup';
 import ChatForm from './ChatForm';
+import ChatHeader from './ChatHeader';
+import ChatLobbie from './ChatLobbie';
 import Messages from './Messages';
 
 // Connect to socket
@@ -137,83 +136,47 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   return (
     <Box
       sx={{
-        padding: "2rem",
         background: "#70C3FF",
-        border: "2px solid green",
         height: 1 / 1,
+        display: "flex",
+        flexWrap: "wrap",
+        width: 1 / 1,
+        alignContent: "space-between",
+        border: "5px solid cyan",
       }}
     >
+      <CssBaseline />
+      {/* Chat Header start */}
+      {props.selectedGroup && (
+        <ChatHeader
+          groupName={props.selectedGroup.name}
+          leaveGroup={leaveGroup}
+        />
+      )}
+      {/* Chat Header end */}
+
+      {/* ======================== */}
+
       {/* Chat Start */}
       <Box
         sx={{
-          height: "70vh",
-          margin: "0 auto",
           width: 1 / 1,
+          height: "70vh",
           position: "relative",
-          border: "2px solid red",
+          overflowY: "scroll",
         }}
       >
         {/* if not group selected */}
-        {!props.selectedGroup && (
-          <Paper
-            elevation={6}
-            sx={{
-              width: 1 / 2,
-              height: 1 / 2,
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              color: "#fff",
-              background:
-                "rgb(112,195,255) radial-gradient(circle, rgba(112,195,255,1) 30%, rgba(109,27,123,1) 97%)",
-              textAlign: "center",
-              padding: "20px",
-            }}
-          >
-            <Lottie
-              animationData={chatAnimation}
-              loop={true}
-              style={{
-                width: "70px",
-                height: "100px",
-                margin: "0 auto",
-              }}
-            />
-            No Group Selected
-          </Paper>
-        )}
+        {!props.selectedGroup && <ChatLobbie />}
 
-        {/* If there is a group */}
-        {props.selectedGroup && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              textAlign: "center",
-            }}
-          >
-            {/* Group name */}
-            <Typography variant="h4" component="h2">
-              {props.selectedGroup?.name}
-            </Typography>
-            <Divider orientation="vertical" />
-            {/* Leave group button */}
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => leaveGroup()}
-            >
-              Leave Group
-            </Button>
-          </Box>
-        )}
         {props.selectedGroup && <Messages messages={message} />}
       </Box>
+
       {/* Chat End */}
 
+      {/* ======================== */}
+
+      {/* Chat footer start */}
       {props.selectedGroup && (
         <ChatForm
           onSubmitHandler={submitHandler}
@@ -221,6 +184,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
           content={newMessage ? newMessage.content : ""}
         />
       )}
+      {/* Chat footer end */}
     </Box>
   );
 };

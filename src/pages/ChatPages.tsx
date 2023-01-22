@@ -1,6 +1,6 @@
 import './style.css';
 
-import { CssBaseline, Grid } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +42,7 @@ const ChatPages = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container sx={{ height: "100vh" }} spacing={0}>
+      {/* <Grid container sx={{ height: "100vh" }} spacing={0}>
         <CssBaseline />
         <Grid item xs={2} sm={2} md={2}>
           <GroupNav onGetGroup={getGroup} />
@@ -50,7 +50,18 @@ const ChatPages = () => {
         <Grid item xs={10} sm={10} md={10}>
           <ChatDisplay cleanGroup={cleanGroup} selectedGroup={group} />
         </Grid>
-      </Grid>
+      </Grid> */}
+      <Box
+        sx={{
+          display: "flex",
+          height: "100vh",
+          border: "1px solid cyan",
+        }}
+      >
+        <CssBaseline />
+        <GroupNav onGetGroup={getGroup} />
+        <ChatDisplay cleanGroup={cleanGroup} selectedGroup={group} />
+      </Box>
     </ThemeProvider>
   );
 };

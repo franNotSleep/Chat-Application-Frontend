@@ -31,6 +31,9 @@ interface IGroupMenuProps {
   currentUser: IUser;
   setValue: React.Dispatch<React.SetStateAction<Value>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  drawerWidth: {
+    sm: number;
+  };
 }
 
 const GroupMenu = (props: IGroupMenuProps) => {
@@ -64,11 +67,19 @@ const GroupMenu = (props: IGroupMenuProps) => {
 
   const list = (anchor: Anchor) => (
     <Box
-      sx={{ width: 250, background: "#6d1b7b", height: 1 / 1 }}
+      sx={{
+        width: { ...props.drawerWidth, xs: 200 },
+        background: "#6d1b7b",
+        height: 1 / 1,
+      }}
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
+      <List
+        sx={{
+          color: "#70c3ff",
+        }}
+      >
         <ListItem disablePadding onClick={() => clickSetValueHandler(0)}>
           <ListItemButton>
             <ListItemAvatar>
@@ -99,13 +110,12 @@ const GroupMenu = (props: IGroupMenuProps) => {
       {/* Menu for small devices */}
       <IconButton
         size="large"
-        edge="start"
         color="inherit"
         aria-label="menu"
         sx={{ mr: 2 }}
         onClick={toggleDrawer("left", true)}
       >
-        <MenuIcon />
+        <MenuIcon color="primary" />
       </IconButton>
       <Drawer
         sx={{
@@ -126,6 +136,7 @@ const GroupMenu = (props: IGroupMenuProps) => {
       <Drawer
         sx={{
           display: { xs: "none", sm: "block" },
+          width: props.drawerWidth,
         }}
         variant="permanent"
         anchor={"left"}

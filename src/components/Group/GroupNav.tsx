@@ -20,6 +20,11 @@ const GroupNav = (props: IGroupNavProps) => {
   const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
 
+  // Determine the drawers width to syncronize with the GroupNav component
+  let drawerWidth = {
+    sm: 200,
+  };
+
   let token!: string;
   let currentUser!: IUser;
 
@@ -92,10 +97,12 @@ const GroupNav = (props: IGroupNavProps) => {
       sx={{
         height: 1 / 1,
         background: "#6d1b7b",
+        width: drawerWidth,
       }}
     >
       <GroupMenu
         currentUser={currentUser}
+        drawerWidth={drawerWidth}
         setValue={setValue}
         setOpen={setOpen}
       />

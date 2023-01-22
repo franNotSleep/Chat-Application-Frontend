@@ -17,17 +17,20 @@ const ChatForm = (props: IChatFormProps) => {
       variant="outlined"
       component="form"
       onSubmit={props.onSubmitHandler}
-      sx={{ p: "0.5rem", display: "flex", alignItems: "center" }}
+      sx={{
+        p: "0.5rem",
+        display: "flex",
+        border: "1px solid red",
+        width: 1 / 1,
+      }}
     >
       <InputBase
-        sx={{ ml: 1, flex: 1 }}
         fullWidth
-        inputProps={{ "aria-label": "Send Message" }}
         placeholder="Send Message"
         value={props.content}
         onChange={props.onChangeHandler}
       />
-      <IconButton type="submit" sx={{ p: "10px" }}>
+      <IconButton type="submit">
         <SendIcon />
       </IconButton>
     </Paper>
