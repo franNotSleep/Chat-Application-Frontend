@@ -175,17 +175,18 @@ const ChatDisplay = (props: IChatDisplayProps) => {
       {/* Chat Header end */}
       {/* ======================== */}
       {/* Chat Start */}
+
       <Box
         sx={{
           width: 1 / 1,
           height: "70vh",
           position: "relative",
-          overflowY: "scroll",
+          overflowY: "auto",
         }}
       >
         {/* if not group selected */}
-        {!props.selectedGroup && <ChatLobbie />}
         {props.selectedGroup && <Messages messages={message} />}
+        {!props.selectedGroup && <ChatLobbie />}
       </Box>
       {/* Chat End */}
       {/* ======================== */}

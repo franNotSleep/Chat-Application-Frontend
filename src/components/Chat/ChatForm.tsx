@@ -20,7 +20,6 @@ const ChatForm = (props: IChatFormProps) => {
       sx={{
         p: "0.5rem",
         display: "flex",
-        border: "1px solid red",
         width: 1 / 1,
       }}
     >

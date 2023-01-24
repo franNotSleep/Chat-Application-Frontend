@@ -48,7 +48,8 @@ const Messages = (props: IMessagesProps) => {
           key={message._id}
         />
       ))}
-      <div ref={messageEndRef}></div>
+
+      <div ref={messageEndRef} style={{ height: "5px" }} />
     </Box>
   );
 };
