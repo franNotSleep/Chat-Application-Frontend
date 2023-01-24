@@ -12,6 +12,7 @@ import Messages from './Messages';
 
 // Connect to socket
 const socket = io("http://localhost:8080");
+let selectedChatCompare: string | undefined = "";
 
 export interface IGroup {
   _id: string;
@@ -72,8 +73,13 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         }
       );
 
-      // Emit message to the server
-      // socket.emit("send-message", data);
+      socket.emit(
+        "new message",
+        newMessage && {
+          content: newMessage,
+          to: newMessage.group,
+        }
+      );
       setMessage([...message, data]);
       setNewMessage({
         sender: currentUser,
@@ -125,13 +131,27 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         },
       }
     );
+    socket.emit("join group", props.selectedGroup?._id);
     setMessage(data);
   };
 
   useEffect(() => {
     // Get message related to the group
     getMessage();
+    selectedChatCompare = props.selectedGroup?._id;
   }, [props.selectedGroup]);
+
+  useEffect(() => {
+    socket.on("message received", (content: IMessage) => {
+      console.log(selectedChatCompare);
+
+      if (!selectedChatCompare || content.group !== selectedChatCompare) {
+        console.log("ping");
+      } else if (selectedChatCompare === content.group) {
+        setMessage([...message, content]);
+      }
+    });
+  });
 
   return (
     <Box
@@ -142,7 +162,6 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         flexWrap: "wrap",
         width: 1 / 1,
         alignContent: "space-between",
-        border: "5px solid cyan",
       }}
     >
       <CssBaseline />
@@ -154,9 +173,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         />
       )}
       {/* Chat Header end */}
-
       {/* ======================== */}
-
       {/* Chat Start */}
       <Box
         sx={{
@@ -168,14 +185,10 @@ const ChatDisplay = (props: IChatDisplayProps) => {
       >
         {/* if not group selected */}
         {!props.selectedGroup && <ChatLobbie />}
-
         {props.selectedGroup && <Messages messages={message} />}
       </Box>
-
       {/* Chat End */}
-
       {/* ======================== */}
-
       {/* Chat footer start */}
       {props.selectedGroup && (
         <ChatForm
