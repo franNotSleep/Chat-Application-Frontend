@@ -25,7 +25,6 @@ const Register = () => {
   });
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    // [e.target.name]: e.target.value == {<nameAttribute>: <value>}
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 

@@ -9,15 +9,14 @@ const ChatLobbie = () => {
     <Paper
       elevation={6}
       sx={{
-        width: 1 / 2,
-        height: 1 / 2,
+        width: 200,
+        height: 200,
         position: "absolute",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
         color: "#fff",
-        background:
-          "rgb(112,195,255) radial-gradient(circle, rgba(112,195,255,1) 30%, rgba(109,27,123,1) 97%)",
+        background: "#70C3FF",
         textAlign: "center",
         padding: "20px",
       }}

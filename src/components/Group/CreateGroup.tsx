@@ -4,8 +4,8 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Autocomplete, Checkbox, Fab, Modal, Paper, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
+import { ChatState } from '../../Context/ChatProvider';
 import { IGroup } from '../Chat/ChatDisplay';
 
 const style = {
@@ -21,7 +21,6 @@ const style = {
 
 interface ICreateGroupProps {
   open: boolean;
-  onGetGroup: (_group: IGroup) => void;
   handleClose(): void;
   onSubmitEffect: () => void;
 }
@@ -31,6 +30,7 @@ export interface IUser {
   email: string;
   avatar: string;
   _id: string;
+  token?: string;
 }
 
 interface IUserResponse {
@@ -40,31 +40,16 @@ interface IUserResponse {
 interface ICreateGroupData {
   participants: string[];
   name: string;
-  admin: string;
+  admin?: string;
 }
 
 const CreateGroup = (props: ICreateGroupProps) => {
-  const navigate = useNavigate();
   const [input, setInput] = useState<ICreateGroupData>({
     participants: [],
     name: "",
     admin: "",
   });
-
-  let adminId: string;
-  let token!: string;
-
-  // If not token, go back to the form component
-  try {
-    if (JSON.parse(localStorage.getItem("user") || "").token) {
-      token = JSON.parse(localStorage.getItem("user") || "").token;
-      adminId = JSON.parse(localStorage.getItem("user") || "")._id;
-    } else {
-      navigate("/");
-    }
-  } catch (err) {
-    navigate("/");
-  }
+  const { user, setSelectedGroup } = ChatState();
 
   const changeUserIdHandler = (
     e: React.SyntheticEvent<Element, Event>,
@@ -72,19 +57,17 @@ const CreateGroup = (props: ICreateGroupProps) => {
   ) => {
     setInput({
       ...input,
-      admin: adminId,
+      admin: user?._id,
       participants: [...users.map((user) => user._id)],
     });
   };
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Creating group
-    console.log(input);
     try {
       const requestConfig = {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
       };
       const newGroup = await axios.post<IGroup>(
@@ -92,24 +75,12 @@ const CreateGroup = (props: ICreateGroupProps) => {
         input,
         requestConfig
       );
-      props.onGetGroup(newGroup.data);
+      setSelectedGroup(newGroup.data);
       props.onSubmitEffect();
     } catch (err: any) {
       console.log(err.response.data);
     }
   };
-
-  useEffect(() => {
-    if (typeof localStorage.getItem("user") === "object") {
-      navigate("/");
-      return;
-    }
-    if (JSON.parse(localStorage.getItem("user") || "")._id) {
-      adminId = JSON.parse(localStorage.getItem("user") || "")._id;
-    } else {
-      navigate("/");
-    }
-  });
 
   return (
     <Modal open={props.open} onClose={props.handleClose}>
@@ -131,7 +102,7 @@ const CreateGroup = (props: ICreateGroupProps) => {
         />
         <ParticipantsField
           onChangeUserIdHandler={changeUserIdHandler}
-          token={token}
+          token={user?.token || "not ticket"}
         />
         <Fab color="primary" type="submit" aria-label="add">
           <AddIcon />

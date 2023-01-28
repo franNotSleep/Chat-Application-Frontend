@@ -1,46 +1,25 @@
 import Box from '@mui/material/Box';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 
+import { ChatState } from '../../Context/ChatProvider';
 import Profile from '../Auth/Profile';
 import { IGroup } from '../Chat/ChatDisplay';
-import CreateGroup, { IUser } from './CreateGroup';
+import CreateGroup from './CreateGroup';
 import GroupMenu, { Value } from './GroupMenu';
 import MyGroups from './MyGroups';
 import SearchGroup from './SearchGroup';
 
-interface IGroupNavProps {
-  onGetGroup(_group: IGroup): void;
-}
-
-const GroupNav = (props: IGroupNavProps) => {
-  const navigate = useNavigate();
+const GroupNav = () => {
   const [value, setValue] = React.useState<Value>(null);
   const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
+  const { user, setSelectedGroup, selectedGroup } = ChatState();
 
   // Determine the drawers width to syncronize with the GroupNav component
   let drawerWidth = {
     sm: 200,
   };
-
-  let token!: string;
-  let currentUser!: IUser;
-
-  // If not token, go back to the form component
-  try {
-    if (JSON.parse(localStorage.getItem("user") || "").token) {
-      token = JSON.parse(localStorage.getItem("user") || "").token;
-      currentUser = JSON.parse(localStorage.getItem("user") || "");
-    } else {
-      navigate("/");
-      return null;
-    }
-  } catch (err) {
-    navigate("/");
-    return null;
-  }
 
   const changeSearchHandler = (
     e: React.SyntheticEvent<Element, Event>,
@@ -61,7 +40,7 @@ const GroupNav = (props: IGroupNavProps) => {
     if (group) {
       let userInGroup = false;
       group.participants.map((participant) => {
-        if (participant._id === currentUser._id) {
+        if (participant._id === user?._id) {
           return (userInGroup = true);
         } else {
           return false;
@@ -73,19 +52,20 @@ const GroupNav = (props: IGroupNavProps) => {
         try {
           const { data } = await axios.put<IGroup>(
             `http://localhost:8080/api/v1/group/${group._id}/add`,
-            { userId: currentUser._id },
+            { userId: user?._id },
             {
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${user?.token}`,
               },
             }
           );
-          props.onGetGroup(data);
+
+          setSelectedGroup(data);
         } catch (err: any) {
           console.log(err.response.data);
         }
       } else {
-        props.onGetGroup(group);
+        setSelectedGroup(group);
       }
     }
     setOpen(false);
@@ -96,23 +76,27 @@ const GroupNav = (props: IGroupNavProps) => {
     <Box
       sx={{
         height: 1 / 1,
-        background: "#6d1b7b",
-        width: drawerWidth,
+        background: "#70C3FF",
+        margin: 0,
+        alignSelf: "flex-start",
+        border: "1px solid red",
       }}
     >
-      <GroupMenu
-        currentUser={currentUser}
-        drawerWidth={drawerWidth}
-        setValue={setValue}
-        setOpen={setOpen}
-      />
+      {user && (
+        <GroupMenu
+          currentUser={user}
+          drawerWidth={drawerWidth}
+          setValue={setValue}
+          setOpen={setOpen}
+        />
+      )}
+
       {value == 1 ? (
         <CreateGroup
           open={open}
           handleClose={() => {
             setOpen(false);
           }}
-          onGetGroup={props.onGetGroup}
           onSubmitEffect={submitEffect}
         />
       ) : value == 2 ? (
@@ -127,7 +111,6 @@ const GroupNav = (props: IGroupNavProps) => {
       ) : value == 3 ? (
         <MyGroups
           open={open}
-          onGetGroup={props.onGetGroup}
           submitEffect={submitEffect}
           handleClose={() => {
             setOpen(false);

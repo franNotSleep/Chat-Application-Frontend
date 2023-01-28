@@ -1,9 +1,9 @@
 import { Box, CssBaseline } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { io } from 'socket.io-client';
 
+import { ChatState } from '../../Context/ChatProvider';
 import { IUser } from '../Group/CreateGroup';
 import ChatForm from './ChatForm';
 import ChatHeader from './ChatHeader';
@@ -12,6 +12,7 @@ import Messages from './Messages';
 
 // Connect to socket
 const socket = io("http://localhost:8080");
+
 let selectedChatCompare: string | undefined = "";
 
 export interface IGroup {
@@ -38,37 +39,25 @@ export interface IMessage {
 }
 
 interface IChatDisplayProps {
-  selectedGroup: IGroup | undefined;
   cleanGroup: () => void;
 }
 
 const ChatDisplay = (props: IChatDisplayProps) => {
-  const navigate = useNavigate();
   const [message, setMessage] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<IMessage>();
 
-  // Get token
-  // if not token, return to home page
-  // if not find user, return to home page
-  let token!: string;
-  let currentUser!: IUser;
-  try {
-    token = JSON.parse(localStorage.getItem("user") || "").token;
-    currentUser = JSON.parse(localStorage.getItem("user") || "");
-  } catch (err) {
-    navigate("/");
-  }
+  const { user, selectedGroup } = ChatState();
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const { data } = await axios.post<IMessage>(
-        `http://localhost:8080/api/v1/message/${props.selectedGroup?._id}/message`,
+        `http://localhost:8080/api/v1/message/${selectedGroup?._id}/message`,
         newMessage,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user?.token}`,
           },
         }
       );
@@ -81,37 +70,39 @@ const ChatDisplay = (props: IChatDisplayProps) => {
         }
       );
       setMessage([...message, data]);
-      setNewMessage({
-        sender: currentUser,
-        content: "",
-      });
+      user &&
+        setNewMessage({
+          sender: user,
+          content: "",
+        });
     } catch (err: any) {
       console.log(err.response.data);
     }
   };
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage({
-      sender: currentUser,
-      content: e.target.value,
-      group: props.selectedGroup?._id,
-    });
+    user &&
+      setNewMessage({
+        sender: user,
+        content: e.target.value,
+        group: selectedGroup?._id,
+      });
   };
 
   // Leave group
   const leaveGroup = async () => {
     try {
       // leaving group
-      if (currentUser._id === props.selectedGroup?.admin._id) {
+      if (user?._id === selectedGroup?.admin._id) {
         // send an alert
         return;
       }
       const { data } = await axios.put(
-        `http://localhost:8080/api/v1/group/${props.selectedGroup?._id}/leave`,
-        { userId: currentUser._id },
+        `http://localhost:8080/api/v1/group/${selectedGroup?._id}/leave`,
+        { userId: user?._id },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user?.token}`,
           },
         }
       );
@@ -124,27 +115,25 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   // Get all message related to selected group
   const getMessage = async () => {
     const { data } = await axios.get<IMessage[]>(
-      `http://localhost:8080/api/v1/message/${props.selectedGroup?._id}/message`,
+      `http://localhost:8080/api/v1/message/${selectedGroup?._id}/message`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
       }
     );
-    socket.emit("join group", props.selectedGroup?._id);
+    socket.emit("join group", selectedGroup?._id);
     setMessage(data);
   };
 
   useEffect(() => {
     // Get message related to the group
     getMessage();
-    selectedChatCompare = props.selectedGroup?._id;
-  }, [props.selectedGroup]);
+    selectedChatCompare = selectedGroup?._id;
+  }, [selectedGroup]);
 
   useEffect(() => {
     socket.on("message received", (content: IMessage) => {
-      console.log(selectedChatCompare);
-
       if (!selectedChatCompare || content.group !== selectedChatCompare) {
         console.log("ping");
       } else if (selectedChatCompare === content.group) {
@@ -166,11 +155,8 @@ const ChatDisplay = (props: IChatDisplayProps) => {
     >
       <CssBaseline />
       {/* Chat Header start */}
-      {props.selectedGroup && (
-        <ChatHeader
-          groupName={props.selectedGroup.name}
-          leaveGroup={leaveGroup}
-        />
+      {selectedGroup && (
+        <ChatHeader groupName={selectedGroup.name} leaveGroup={leaveGroup} />
       )}
       {/* Chat Header end */}
       {/* ======================== */}
@@ -184,14 +170,13 @@ const ChatDisplay = (props: IChatDisplayProps) => {
           overflowY: "auto",
         }}
       >
-        {/* if not group selected */}
-        {props.selectedGroup && <Messages messages={message} />}
-        {!props.selectedGroup && <ChatLobbie />}
+        {selectedGroup && <Messages messages={message} />}
+        {!selectedGroup && <ChatLobbie />}
       </Box>
       {/* Chat End */}
       {/* ======================== */}
       {/* Chat footer start */}
-      {props.selectedGroup && (
+      {selectedGroup && (
         <ChatForm
           onSubmitHandler={submitHandler}
           onChangeHandler={changeHandler}

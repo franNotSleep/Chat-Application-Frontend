@@ -1,7 +1,6 @@
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, InputBase, Paper } from '@mui/material';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 interface IChatFormProps {
   onSubmitHandler(e: React.ChangeEvent<HTMLFormElement>): void;
@@ -10,7 +9,6 @@ interface IChatFormProps {
 }
 
 const ChatForm = (props: IChatFormProps) => {
-  const navigate = useNavigate();
   return (
     <Paper
       elevation={2}

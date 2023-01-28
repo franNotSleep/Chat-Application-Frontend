@@ -2,11 +2,11 @@ import './style.css';
 
 import { Box, CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import ChatDisplay, { IGroup } from '../components/Chat/ChatDisplay';
 import GroupNav from '../components/Group/GroupNav';
+import { ChatState } from '../Context/ChatProvider';
 
 const theme = createTheme({
   palette: {
@@ -23,22 +23,19 @@ const theme = createTheme({
 });
 
 const ChatPages = () => {
-  const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup>();
+
+  const { setSelectedGroup, selectedGroup } = ChatState();
 
   const getGroup = (_group: IGroup) => {
     setGroup(_group);
+    // setSelectedGroup(_group);
   };
 
   const cleanGroup = () => {
     setGroup(undefined);
+    // setSelectedGroup(undefined);
   };
-
-  useEffect(() => {
-    if (typeof localStorage.getItem("user") !== "string") {
-      navigate("/");
-    }
-  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -46,11 +43,13 @@ const ChatPages = () => {
         sx={{
           display: "flex",
           height: "100vh",
+          background: "#70C3FF",
+          flexDirection: { xs: "column", sm: "row" },
         }}
       >
         <CssBaseline />
-        <GroupNav onGetGroup={getGroup} />
-        <ChatDisplay cleanGroup={cleanGroup} selectedGroup={group} />
+        <GroupNav />
+        <ChatDisplay cleanGroup={cleanGroup} />
       </Box>
     </ThemeProvider>
   );

@@ -69,7 +69,7 @@ const GroupMenu = (props: IGroupMenuProps) => {
     <Box
       sx={{
         width: { ...props.drawerWidth, xs: 200 },
-        background: "#6d1b7b",
+        background: "#70C3FF",
         height: 1 / 1,
       }}
       onClick={toggleDrawer(anchor, false)}
@@ -77,7 +77,7 @@ const GroupMenu = (props: IGroupMenuProps) => {
     >
       <List
         sx={{
-          color: "#70c3ff",
+          color: "#fff",
         }}
       >
         <ListItem disablePadding onClick={() => clickSetValueHandler(0)}>
@@ -108,14 +108,8 @@ const GroupMenu = (props: IGroupMenuProps) => {
   return (
     <div>
       {/* Menu for small devices */}
-      <IconButton
-        size="large"
-        color="inherit"
-        aria-label="menu"
-        sx={{ mr: 2 }}
-        onClick={toggleDrawer("left", true)}
-      >
-        <MenuIcon color="primary" />
+      <IconButton size="large" onClick={toggleDrawer("left", true)}>
+        <MenuIcon sx={{ color: "#fff" }} />
       </IconButton>
       <Drawer
         sx={{
@@ -131,12 +125,12 @@ const GroupMenu = (props: IGroupMenuProps) => {
 
         {list("left")}
       </Drawer>
-
       {/* Menu for big devices */}
       <Drawer
         sx={{
           display: { xs: "none", sm: "block" },
           width: props.drawerWidth,
+          background: "#000",
         }}
         variant="permanent"
         anchor={"left"}

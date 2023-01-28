@@ -2,15 +2,13 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import { Box, IconButton, Modal, Paper, Tooltip, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
+import { ChatState } from '../../Context/ChatProvider';
 import { IGroup, IGroupResponse } from '../Chat/ChatDisplay';
-import { IUser } from './CreateGroup';
 
 interface IMyGroupsProps {
   open: boolean;
   handleClose(): void;
-  onGetGroup(_group: IGroup): void;
   submitEffect: () => void;
 }
 
@@ -30,22 +28,8 @@ const style = {
 };
 
 const MyGroups = (props: IMyGroupsProps) => {
-  const navigate = useNavigate();
   const [myGroups, setMyGroups] = useState<IGroup[]>([]);
-  let currentUser!: IUser;
-  let token!: string;
-
-  // If not token, go back to the form component
-  try {
-    if (JSON.parse(localStorage.getItem("user") || "").token) {
-      token = JSON.parse(localStorage.getItem("user") || "").token;
-      currentUser = JSON.parse(localStorage.getItem("user") || "");
-    } else {
-      navigate("/");
-    }
-  } catch (err) {
-    navigate("/");
-  }
+  const { user, setSelectedGroup } = ChatState();
 
   // get groups by current user
   const getGroups = async () => {
@@ -53,7 +37,7 @@ const MyGroups = (props: IMyGroupsProps) => {
       `http://localhost:8080/api/v1/user/group?search=`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
       }
     );
@@ -83,7 +67,7 @@ const MyGroups = (props: IMyGroupsProps) => {
               <IconButton
                 type="button"
                 onClick={() => {
-                  props.onGetGroup(group);
+                  setSelectedGroup(group);
                   props.submitEffect();
                 }}
                 sx={{ p: "10px" }}
