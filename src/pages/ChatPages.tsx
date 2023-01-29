@@ -4,8 +4,8 @@ import { Box, CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import ChatDisplay, { IGroup } from '../components/Chat/ChatDisplay';
-import GroupNav from '../components/Group/GroupNav';
+import ChatDisplay from '../components/Chat/ChatDisplay';
+import Navbar from '../components/Navbar/Navbar';
 import { ChatState } from '../Context/ChatProvider';
 
 const theme = createTheme({
@@ -23,18 +23,10 @@ const theme = createTheme({
 });
 
 const ChatPages = () => {
-  const [group, setGroup] = useState<IGroup>();
-
   const { setSelectedGroup, selectedGroup } = ChatState();
 
-  const getGroup = (_group: IGroup) => {
-    setGroup(_group);
-    // setSelectedGroup(_group);
-  };
-
   const cleanGroup = () => {
-    setGroup(undefined);
-    // setSelectedGroup(undefined);
+    setSelectedGroup(undefined);
   };
 
   return (
@@ -43,12 +35,12 @@ const ChatPages = () => {
         sx={{
           display: "flex",
           height: "100vh",
-          background: "#70C3FF",
-          flexDirection: { xs: "column", sm: "row" },
+          flexDirection: "column",
         }}
       >
         <CssBaseline />
-        <GroupNav />
+        <Navbar />
+        {/* <GroupNav /> */}
         <ChatDisplay cleanGroup={cleanGroup} />
       </Box>
     </ThemeProvider>

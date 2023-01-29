@@ -6,15 +6,15 @@ import { ChatState } from '../../Context/ChatProvider';
 import Profile from '../Auth/Profile';
 import { IGroup } from '../Chat/ChatDisplay';
 import CreateGroup from './CreateGroup';
-import GroupMenu, { Value } from './GroupMenu';
+import GroupMenu from './GroupMenu';
 import MyGroups from './MyGroups';
 import SearchGroup from './SearchGroup';
 
 const GroupNav = () => {
-  const [value, setValue] = React.useState<Value>(null);
   const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
-  const { user, setSelectedGroup, selectedGroup } = ChatState();
+  const { user, setSelectedGroup, selectedGroup, value, setValue } =
+    ChatState();
 
   // Determine the drawers width to syncronize with the GroupNav component
   let drawerWidth = {
@@ -34,6 +34,7 @@ const GroupNav = () => {
     setOpen(false);
   };
 
+  console.log(`Value: ${value}`);
   const searchSubmitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -86,7 +87,7 @@ const GroupNav = () => {
         <GroupMenu
           currentUser={user}
           drawerWidth={drawerWidth}
-          setValue={setValue}
+          // setValue={setValue}
           setOpen={setOpen}
         />
       )}

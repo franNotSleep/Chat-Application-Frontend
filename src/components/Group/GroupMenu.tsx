@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
+import { ChatState } from '../../Context/ChatProvider';
 import { IUser } from './CreateGroup';
 
 type Anchor = "left";
@@ -29,7 +30,7 @@ interface IList {
 
 interface IGroupMenuProps {
   currentUser: IUser;
-  setValue: React.Dispatch<React.SetStateAction<Value>>;
+  setValue?: React.Dispatch<React.SetStateAction<Value>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   drawerWidth: {
     sm: number;
@@ -38,6 +39,7 @@ interface IGroupMenuProps {
 
 const GroupMenu = (props: IGroupMenuProps) => {
   const [openMenu, setOpenMenu] = React.useState(false);
+  const { setValue } = ChatState();
   // this value is going to be used by the GroupNav components for represent
 
   const textAndIcon: IList[] = [
@@ -47,7 +49,7 @@ const GroupMenu = (props: IGroupMenuProps) => {
   ];
 
   const clickSetValueHandler = (newVal: Value) => {
-    props.setValue(newVal);
+    newVal && setValue(newVal);
     props.setOpen(true);
   };
 

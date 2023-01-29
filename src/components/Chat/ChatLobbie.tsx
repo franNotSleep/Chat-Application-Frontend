@@ -16,7 +16,7 @@ const ChatLobbie = () => {
         left: "50%",
         transform: "translate(-50%, -50%)",
         color: "#fff",
-        background: "#70C3FF",
+        background: "linear-gradient(to top, #2193b0, #6dd5ed)",
         textAlign: "center",
         padding: "20px",
       }}

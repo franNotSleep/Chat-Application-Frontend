@@ -10,6 +10,10 @@ type ChatContent = {
   setUser: (u: IUser) => void;
   selectedGroup: IGroup | undefined;
   setSelectedGroup: (g: IGroup | undefined) => void;
+  value: number;
+  setValue: (v: number) => void;
+  openModal: boolean;
+  setOpenModal: (open: boolean) => void;
 };
 
 export interface IUser {
@@ -36,12 +40,18 @@ const ChatContext = createContext<ChatContent>({
   setUser: () => {},
   selectedGroup: undefined,
   setSelectedGroup: () => {},
+  value: 0,
+  setValue: () => {},
+  openModal: false,
+  setOpenModal: () => {},
 });
 
 const ChatProvider = ({ children }: IChatProviderProps) => {
   const navigate = useNavigate();
   const [selectedGroup, setSelectedGroup] = useState<IGroup>();
+  const [value, setValue] = useState(0);
   const [user, setUser] = useState<IUser>();
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     try {
@@ -56,7 +66,16 @@ const ChatProvider = ({ children }: IChatProviderProps) => {
 
   return (
     <ChatContext.Provider
-      value={{ user, setUser, selectedGroup, setSelectedGroup }}
+      value={{
+        user,
+        setUser,
+        selectedGroup,
+        setSelectedGroup,
+        value,
+        setValue,
+        openModal,
+        setOpenModal,
+      }}
     >
       {children}
     </ChatContext.Provider>
