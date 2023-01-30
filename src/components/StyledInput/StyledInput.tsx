@@ -1,5 +1,4 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { InputBase } from '@mui/material';
+import InputBase from '@mui/material/InputBase';
 import { alpha, styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -10,11 +9,10 @@ const Search = styled("div")(({ theme }) => ({
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing(1),
     width: "auto",
   },
 }));
@@ -37,24 +35,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
     },
   },
 }));
 
-const SearchBar = () => {
+interface StyledInputProps {
+  placeholder: string;
+  value: string;
+  changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon: React.ReactNode;
+}
+
+const StyledInput = ({
+  placeholder,
+  value,
+  changeHandler,
+  icon,
+}: StyledInputProps) => {
   return (
     <Search>
-      <SearchIconWrapper>
-        <SearchIcon sx={{ color: "#fff" }} />
-      </SearchIconWrapper>
+      <SearchIconWrapper>{icon}</SearchIconWrapper>
       <StyledInputBase
-        placeholder="Search Group..."
-        inputProps={{ "aria-label": "search" }}
+        placeholder={placeholder}
+        value={value}
+        onChange={changeHandler}
       />
     </Search>
   );
 };
 
-export default SearchBar;
+export default StyledInput;

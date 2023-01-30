@@ -12,14 +12,14 @@ import { ChatState } from '../../Context/ChatProvider';
 
 const BasicMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { setValue } = ChatState();
+  const { setValue, setOpenDrawer } = ChatState();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   /**
-   * @description close the menu and get the value of the list Item
+   * @description Open modal corresponding to specific value
    */
   const handleClose = (event: React.MouseEvent<HTMLElement>) => {
     const item =
@@ -33,6 +33,7 @@ const BasicMenu = () => {
       setValue(3);
     }
     setAnchorEl(null);
+    setOpenDrawer(true);
   };
 
   return (

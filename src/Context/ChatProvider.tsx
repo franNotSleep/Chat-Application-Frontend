@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -10,10 +11,19 @@ type ChatContent = {
   setUser: (u: IUser) => void;
   selectedGroup: IGroup | undefined;
   setSelectedGroup: (g: IGroup | undefined) => void;
-  value: number;
-  setValue: (v: number) => void;
-  openModal: boolean;
-  setOpenModal: (open: boolean) => void;
+  value: ComponentValue;
+  setValue: (v: ComponentValue) => void;
+  openDrawer: boolean;
+  setOpenDrawer: (open: boolean) => void;
+  randomQuote: RandomQuote | undefined;
+};
+
+type RandomQuote = {
+  _id: string;
+  content: string;
+  author: string;
+  tags: string[];
+  authorSlug: string;
 };
 
 export interface IUser {
@@ -22,6 +32,7 @@ export interface IUser {
   avatar: string;
   _id: string;
   token?: string;
+  aboutMe?: string;
 }
 
 export interface IGroup {
@@ -42,22 +53,34 @@ const ChatContext = createContext<ChatContent>({
   setSelectedGroup: () => {},
   value: 0,
   setValue: () => {},
-  openModal: false,
-  setOpenModal: () => {},
+  openDrawer: false,
+  setOpenDrawer: () => {},
+  randomQuote: undefined,
 });
+
+type ComponentValue = 0 | 1 | 2 | 3 | 4 | 5 | null;
 
 const ChatProvider = ({ children }: IChatProviderProps) => {
   const navigate = useNavigate();
   const [selectedGroup, setSelectedGroup] = useState<IGroup>();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<ComponentValue>(null);
   const [user, setUser] = useState<IUser>();
-  const [openModal, setOpenModal] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [randomQuote, setRandomQuote] = useState<RandomQuote>();
+
+  const generateRandomQuote = async () => {
+    const { data } = await axios.get<RandomQuote>(
+      "https://api.quotable.io/random"
+    );
+    setRandomQuote(data);
+  };
 
   useEffect(() => {
     try {
       const userInfo: IUser = JSON.parse(localStorage.getItem("user") || "");
       setUser(userInfo);
       setSelectedGroup(undefined);
+      generateRandomQuote();
     } catch (err) {
       setUser(undefined);
       navigate("/");
@@ -73,8 +96,9 @@ const ChatProvider = ({ children }: IChatProviderProps) => {
         setSelectedGroup,
         value,
         setValue,
-        openModal,
-        setOpenModal,
+        openDrawer,
+        setOpenDrawer,
+        randomQuote,
       }}
     >
       {children}

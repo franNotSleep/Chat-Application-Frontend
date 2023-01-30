@@ -31,7 +31,6 @@ const Login = () => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
     try {
       const { data } = await axios.post<GetToken>(
         "http://localhost:8080/api/v1/auth/login",

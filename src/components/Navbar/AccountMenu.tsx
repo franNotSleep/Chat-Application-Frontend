@@ -8,13 +8,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
+import axios from 'axios';
 import * as React from 'react';
+import { useNavigate } from 'react-router';
 
 import { ChatState } from '../../Context/ChatProvider';
 
 const AccountMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { user, setValue } = ChatState();
+  const { user, setValue, setOpenDrawer } = ChatState();
+  const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,7 +25,25 @@ const AccountMenu = () => {
   };
 
   /**
-   * @description close the menu and get the value of the list Item
+   * @desc remove user info from localStorage and redirect to home page
+   */
+  const logoutHandler = async () => {
+    // remove token from cookies
+    try {
+      await axios.get("http://localhost:8080/api/v1/auth/logout");
+
+      // removing user from the localstorage
+      localStorage.clear();
+
+      // go back to home page
+      navigate("/");
+    } catch (error: any) {
+      console.log(error.response);
+    }
+  };
+
+  /**
+   * @description Open modal corresponding to specific value
    */
   const handleClose = (event: React.MouseEvent<HTMLElement>) => {
     const item =
@@ -30,13 +51,14 @@ const AccountMenu = () => {
       event.currentTarget.textContent?.trim().split(" ")[0];
 
     if (item === "Logout") {
-      setValue(4);
+      logoutHandler();
     } else if (item === "Edit") {
       setValue(5);
     } else if (item === "Profile") {
       setValue(0);
     }
     setAnchorEl(null);
+    setOpenDrawer(true);
   };
   return (
     <React.Fragment>

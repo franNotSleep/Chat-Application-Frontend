@@ -1,32 +1,13 @@
-import EditIcon from '@mui/icons-material/Edit';
-import LogoutIcon from '@mui/icons-material/Logout';
-import SendIcon from '@mui/icons-material/Send';
-import {
-  Avatar,
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
-  Modal,
-  Paper,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 
-import { IUser } from '../Group/CreateGroup';
+import { ChatState } from '../../Context/ChatProvider';
+import DrawerWrapper from '../DrawerWrapper';
 
 interface IProfileProps {
   open: boolean;
   handleClose(): void;
-}
-
-interface IEditResponse {
-  success: true;
-  user: IUser;
 }
 
 const style = {
@@ -40,139 +21,106 @@ const style = {
   flexDirection: "column",
 };
 
+type Anchor = "top" | "left" | "bottom" | "right";
+
 const Profile = (props: IProfileProps) => {
-  const navigate = useNavigate();
+  const { user, openDrawer, setOpenDrawer, randomQuote } = ChatState();
 
-  let token!: string;
-  let currentUser!: IUser;
-
-  // If not token, go back to the form component
-  try {
-    if (JSON.parse(localStorage.getItem("user") || "").token) {
-      token = JSON.parse(localStorage.getItem("user") || "").token;
-      currentUser = JSON.parse(localStorage.getItem("user") || "");
-    } else {
-      navigate("/");
-    }
-  } catch (err) {
-    navigate("/");
-  }
-  const [editing, setEditing] = useState(false);
-  const [input, setInput] = useState({
-    name: currentUser.name,
-    email: currentUser.email,
-  });
-
-  const logoutHandler = async () => {
-    // remove token from cookies
-    try {
-      await axios.get("http://localhost:8080/api/v1/auth/logout");
-
-      // removing user from the localstorage
-      localStorage.clear();
-
-      // go back to home page
-      navigate("/");
-    } catch (error: any) {
-      console.log(error.response);
-    }
+  const generateRandomQuote = async () => {
+    const { data } = await axios.get("https://api.quotable.io/random");
+    console.log(data);
   };
 
-  const editHandler = async () => {
-    const {
-      data: { user, success },
-    } = await axios.put<IEditResponse>(
-      "http://localhost:8080/api/v1/auth/uptdetails",
-      {
-        name: input.name,
-        email: input.email,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  /**
+   *
+   * @param open determine whether open the drawer
+   * @description Close the drawer if we tap out of the drawer and when press Shift
+   */
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
       }
-    );
-
-    let userToken = { ...user, token };
-
-    setInput({ name: user.name, email: user.email });
-    localStorage.setItem("user", JSON.stringify(userToken));
-    setEditing(false);
-  };
-
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    // [e.target.name]: e.target.value == {<nameAttribute>: <value>}
-    setInput({ ...input, [e.target.name]: e.target.value });
-  };
+      setOpenDrawer(open);
+    };
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
-      <Paper elevation={2} sx={style}>
-        <Card sx={{ maxWidth: 345 }}>
-          <CardContent>
-            {/* Return the first to letter of the current user name */}
-            <Avatar src={currentUser.avatar} />
-            {/* If editing is true, transform the label to inputs */}
-            {!editing ? (
-              <Typography gutterBottom variant="h5" component="div">
-                {input.name}
-              </Typography>
-            ) : (
-              <TextField
-                value={input.name}
-                name="name"
-                onChange={changeHandler}
-              />
-            )}
-            {!editing ? (
-              <Typography variant="body2" color="text.secondary">
-                {input.email}
-              </Typography>
-            ) : (
+    <DrawerWrapper>
+      <List>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar alt={user?.name} src={user?.avatar} />
+          </ListItemAvatar>
+        </ListItem>
+        <Divider textAlign="left" sx={{ color: "#fff" }}>
+          Name
+        </Divider>
+        <ListItem>
+          <ListItemText
+            secondary={
               <>
-                <TextField
-                  value={input.email}
-                  name="email"
-                  onChange={changeHandler}
-                />
-                <Tooltip title="Confirm">
-                  <IconButton
-                    type="button"
-                    sx={{ p: "10px" }}
-                    onClick={editHandler}
-                  >
-                    <SendIcon />
-                  </IconButton>
-                </Tooltip>
+                <Typography component="span" variant="body2">
+                  {user?.name}
+                </Typography>
               </>
-            )}
-          </CardContent>
-          <CardActions>
-            <Tooltip title="Logout">
-              <IconButton
-                type="button"
-                sx={{ p: "10px" }}
-                onClick={logoutHandler}
-              >
-                <LogoutIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Edit">
-              <IconButton
-                type="button"
-                sx={{ p: "10px" }}
-                onClick={() => {
-                  setEditing(!editing);
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-          </CardActions>
-        </Card>
-      </Paper>
-    </Modal>
+            }
+          ></ListItemText>
+        </ListItem>
+        <Divider textAlign="left" sx={{ color: "#fff" }}>
+          Email
+        </Divider>
+        <ListItem>
+          <ListItemText
+            secondary={
+              <>
+                <Typography component="span" variant="body2">
+                  {user?.email}
+                </Typography>
+              </>
+            }
+          ></ListItemText>
+        </ListItem>
+        <Divider textAlign="left" sx={{ color: "#fff" }}>
+          ID
+        </Divider>
+        <ListItem>
+          <ListItemText
+            sx={{ color: "#fff" }}
+            secondary={
+              <>
+                <Typography component="span" variant="body2">
+                  {user?._id}
+                </Typography>
+              </>
+            }
+          ></ListItemText>
+        </ListItem>
+        {!user?.aboutMe && (
+          <>
+            <Divider textAlign="left" sx={{ color: "#fff" }}>
+              From {randomQuote?.author} to you
+            </Divider>
+
+            <ListItem sx={{ textAlign: "left" }}>
+              <ListItemText
+                secondary={
+                  <>
+                    <Typography component="span" variant="body2">
+                      "{randomQuote?.content}"
+                    </Typography>
+                    <Divider orientation="vertical" />-{randomQuote?.author}
+                  </>
+                }
+              ></ListItemText>
+            </ListItem>
+          </>
+        )}
+      </List>
+    </DrawerWrapper>
   );
 };
 

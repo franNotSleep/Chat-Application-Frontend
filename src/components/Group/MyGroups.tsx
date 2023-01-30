@@ -29,7 +29,7 @@ const style = {
 
 const MyGroups = (props: IMyGroupsProps) => {
   const [myGroups, setMyGroups] = useState<IGroup[]>([]);
-  const { user, setSelectedGroup } = ChatState();
+  const { user, setSelectedGroup, openDrawer } = ChatState();
 
   // get groups by current user
   const getGroups = async () => {
@@ -50,7 +50,7 @@ const MyGroups = (props: IMyGroupsProps) => {
   }, []);
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={openDrawer} onClose={props.handleClose}>
       <Box sx={style}>
         {myGroups.map((group) => (
           <Paper

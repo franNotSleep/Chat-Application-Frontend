@@ -1,23 +1,14 @@
 import AddIcon from '@mui/icons-material/Add';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Autocomplete, Checkbox, Fab, Modal, Paper, TextField, Typography } from '@mui/material';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import { Button, Paper } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 import { ChatState } from '../../Context/ChatProvider';
 import { IGroup } from '../Chat/ChatDisplay';
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-  width: { xs: "300px", sm: "500px", lg: "650px" },
-};
+import DrawerWrapper from '../DrawerWrapper';
+import StyledInput from '../StyledInput/StyledInput';
+import ParticipantsField from './ParticipantsField';
 
 interface ICreateGroupProps {
   open: boolean;
@@ -31,10 +22,6 @@ export interface IUser {
   avatar: string;
   _id: string;
   token?: string;
-}
-
-interface IUserResponse {
-  users: IUser[];
 }
 
 interface ICreateGroupData {
@@ -83,115 +70,40 @@ const CreateGroup = (props: ICreateGroupProps) => {
   };
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
-      <Paper sx={style} elevation={6} component="form" onSubmit={submitHandler}>
-        <Typography variant="h6" component="h2">
-          Create Modal
-        </Typography>
-        <TextField
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          label="Group Name"
-          onChange={(e) => {
+    <DrawerWrapper>
+      <Paper
+        sx={{
+          background: "#70C3FF",
+          height: "100%",
+        }}
+        component="form"
+        onSubmit={submitHandler}
+      >
+        <StyledInput
+          icon={<Diversity3Icon sx={{ color: "#fff" }} />}
+          placeholder="Group Name"
+          changeHandler={(e) => {
             setInput({
               ...input,
               name: e.target.value,
             });
           }}
+          value={input.name}
         />
-        <ParticipantsField
-          onChangeUserIdHandler={changeUserIdHandler}
-          token={user?.token || "not ticket"}
-        />
-        <Fab color="primary" type="submit" aria-label="add">
-          <AddIcon />
-        </Fab>
-      </Paper>
-    </Modal>
-  );
-};
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-interface ParticipantsFieldProps {
-  onChangeUserIdHandler(
-    e: React.SyntheticEvent<Element, Event>,
-    users: IUser[]
-  ): void;
-  token: string;
-}
-
-/**
- * @desc Make an API request to the server and get back all users according to the user input
- * @params onChangeUserIdHandler(e: React.SyntheticEvent<Element, Event>, users:IUser[]): void;
- * @params token: string
- */
-const ParticipantsField = (props: ParticipantsFieldProps) => {
-  const [users, setUsers] = useState([
-    {
-      name: "",
-      email: "",
-      avatar: "",
-      _id: "",
-    },
-  ]);
-  const [input, setInput] = useState("");
-
-  // Get all the users that match userInput
-  const getUsers = async (userInput: string) => {
-    const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${props.token}`,
-      },
-    };
-    try {
-      const { data } = await axios.get<IUserResponse>(
-        `http://localhost:8080/api/v1/user?search=${userInput}`,
-        requestConfig
-      );
-      setUsers(data.users);
-    } catch (err: any) {
-      console.log(err.response.data);
-    }
-  };
-
-  useEffect(() => {
-    getUsers(input);
-  }, [input]);
-
-  return (
-    <Autocomplete
-      multiple
-      options={users}
-      disableCloseOnSelect
-      isOptionEqualToValue={(option, value) => option._id === value._id}
-      onChange={props.onChangeUserIdHandler}
-      getOptionLabel={(option) => option.name}
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option.name}
-        </li>
-      )}
-      renderInput={(params) => (
-        <TextField
-          margin="normal"
-          {...params}
-          label="Participants"
-          placeholder="Participants"
-          onChange={(e) => {
-            setInput(e.target.value);
+        <ParticipantsField onChangeUserIdHandler={changeUserIdHandler} />
+        <Button
+          variant="contained"
+          sx={{
+            color: "#fff",
+            alignSelf: "flex-end",
           }}
-        />
-      )}
-    />
+          type="submit"
+          endIcon={<AddIcon />}
+        >
+          Create
+        </Button>
+      </Paper>
+    </DrawerWrapper>
   );
 };
 

@@ -6,35 +6,28 @@ import { ChatState } from '../../Context/ChatProvider';
 import Profile from '../Auth/Profile';
 import { IGroup } from '../Chat/ChatDisplay';
 import CreateGroup from './CreateGroup';
-import GroupMenu from './GroupMenu';
 import MyGroups from './MyGroups';
 import SearchGroup from './SearchGroup';
 
 const GroupNav = () => {
   const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
-  const { user, setSelectedGroup, selectedGroup, value, setValue } =
+  const { user, setSelectedGroup, value, setValue, setOpenDrawer } =
     ChatState();
-
-  // Determine the drawers width to syncronize with the GroupNav component
-  let drawerWidth = {
-    sm: 200,
-  };
 
   const changeSearchHandler = (
     e: React.SyntheticEvent<Element, Event>,
-    value: IGroup
+    group: IGroup
   ) => {
-    setGroup(value);
+    setGroup(group);
   };
 
   // This function only reset value, and open to the default value
   const submitEffect = () => {
-    setValue(0);
+    setValue(null);
     setOpen(false);
   };
 
-  console.log(`Value: ${value}`);
   const searchSubmitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -69,34 +62,17 @@ const GroupNav = () => {
         setSelectedGroup(group);
       }
     }
-    setOpen(false);
-    setValue(0);
+    setOpenDrawer(false);
+    setValue(null);
   };
 
   return (
-    <Box
-      sx={{
-        height: 1 / 1,
-        background: "#70C3FF",
-        margin: 0,
-        alignSelf: "flex-start",
-        border: "1px solid red",
-      }}
-    >
-      {user && (
-        <GroupMenu
-          currentUser={user}
-          drawerWidth={drawerWidth}
-          // setValue={setValue}
-          setOpen={setOpen}
-        />
-      )}
-
+    <Box>
       {value == 1 ? (
         <CreateGroup
           open={open}
           handleClose={() => {
-            setOpen(false);
+            setOpenDrawer(false);
           }}
           onSubmitEffect={submitEffect}
         />
@@ -106,7 +82,7 @@ const GroupNav = () => {
           onSubmitHandler={searchSubmitHandler}
           onChangeSearch={changeSearchHandler}
           handleClose={() => {
-            setOpen(false);
+            setOpenDrawer(false);
           }}
         />
       ) : value == 3 ? (
@@ -114,14 +90,14 @@ const GroupNav = () => {
           open={open}
           submitEffect={submitEffect}
           handleClose={() => {
-            setOpen(false);
+            setOpenDrawer(false);
           }}
         />
       ) : value == 0 ? (
         <Profile
           open={open}
           handleClose={() => {
-            setOpen(false);
+            setOpenDrawer(false);
           }}
         />
       ) : (

@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
 import ChatDisplay from '../components/Chat/ChatDisplay';
+import GroupNav from '../components/Group/GroupNav';
 import Navbar from '../components/Navbar/Navbar';
 import { ChatState } from '../Context/ChatProvider';
 
@@ -23,7 +24,7 @@ const theme = createTheme({
 });
 
 const ChatPages = () => {
-  const { setSelectedGroup, selectedGroup } = ChatState();
+  const { setSelectedGroup } = ChatState();
 
   const cleanGroup = () => {
     setSelectedGroup(undefined);
@@ -40,7 +41,7 @@ const ChatPages = () => {
       >
         <CssBaseline />
         <Navbar />
-        {/* <GroupNav /> */}
+        <GroupNav />
         <ChatDisplay cleanGroup={cleanGroup} />
       </Box>
     </ThemeProvider>

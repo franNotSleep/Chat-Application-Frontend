@@ -1,5 +1,4 @@
-import Diversity3Icon from '@mui/icons-material/Diversity3';
-import { Autocomplete, Box, Button, Modal, TextField } from '@mui/material';
+import { Autocomplete, Box, Modal, TextField } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -98,9 +97,6 @@ const SearchGroup = (props: ISearchGroupProps) => {
             />
           )}
         />
-        <Button variant="text" type="submit" endIcon={<Diversity3Icon />}>
-          JOIN
-        </Button>
       </Box>
     </Modal>
   );
