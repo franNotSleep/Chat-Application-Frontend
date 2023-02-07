@@ -1,10 +1,10 @@
 import AddIcon from '@mui/icons-material/Add';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
-import { Button, Paper } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-import { ChatState } from '../../Context/ChatProvider';
+import { ChatState, IUser } from '../../Context/ChatProvider';
 import { IGroup } from '../Chat/ChatDisplay';
 import DrawerWrapper from '../DrawerWrapper';
 import StyledInput from '../StyledInput/StyledInput';
@@ -14,14 +14,6 @@ interface ICreateGroupProps {
   open: boolean;
   handleClose(): void;
   onSubmitEffect: () => void;
-}
-
-export interface IUser {
-  name: string;
-  email: string;
-  avatar: string;
-  _id: string;
-  token?: string;
 }
 
 interface ICreateGroupData {
@@ -38,19 +30,23 @@ const CreateGroup = (props: ICreateGroupProps) => {
   });
   const { user, setSelectedGroup } = ChatState();
 
-  const changeUserIdHandler = (
+  const changeAutocompleteHandler = (
     e: React.SyntheticEvent<Element, Event>,
-    users: IUser[]
+    users: IUser | IGroup | (IUser | IGroup)[] | null
   ) => {
-    setInput({
-      ...input,
-      admin: user?._id,
-      participants: [...users.map((user) => user._id)],
-    });
+    if (users instanceof Array) {
+      users.map((user) => {
+        setInput({
+          ...input,
+          participants: [...input.participants, user._id],
+        });
+      });
+    }
   };
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(input);
     try {
       const requestConfig = {
         headers: {
@@ -70,32 +66,47 @@ const CreateGroup = (props: ICreateGroupProps) => {
   };
 
   return (
-    <DrawerWrapper>
+    <DrawerWrapper anchor="bottom">
       <Paper
         sx={{
           background: "#70C3FF",
-          height: "100%",
+          display: "flex",
+          flexWrap: "wrap",
+          alignContent: "space-around",
+          textAlign: "center",
         }}
         component="form"
         onSubmit={submitHandler}
       >
-        <StyledInput
-          icon={<Diversity3Icon sx={{ color: "#fff" }} />}
-          placeholder="Group Name"
-          changeHandler={(e) => {
-            setInput({
-              ...input,
-              name: e.target.value,
-            });
+        <Typography variant="h4" component="p" sx={{ color: "#fff" }}>
+          New Group
+        </Typography>
+        <Box
+          sx={{
+            width: "90%",
           }}
-          value={input.name}
-        />
-        <ParticipantsField onChangeUserIdHandler={changeUserIdHandler} />
+        >
+          <StyledInput
+            icon={<Diversity3Icon sx={{ color: "#fff" }} />}
+            placeholder="Group Name"
+            changeHandler={(e) => {
+              setInput({
+                ...input,
+                name: e.target.value,
+              });
+            }}
+            value={input.name}
+          />
+          <ParticipantsField
+            changeAutocompleteHandler={changeAutocompleteHandler}
+          />
+        </Box>
+
         <Button
           variant="contained"
           sx={{
-            color: "#fff",
-            alignSelf: "flex-end",
+            background: "#fff",
+            color: "#70C3FF",
           }}
           type="submit"
           endIcon={<AddIcon />}

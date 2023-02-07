@@ -1,14 +1,13 @@
-import { Box, CssBaseline } from '@mui/material';
-import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
+import { Box, CssBaseline } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
-import { ChatState } from '../../Context/ChatProvider';
-import { IUser } from '../Group/CreateGroup';
-import ChatForm from './ChatForm';
-import ChatHeader from './ChatHeader';
-import ChatLobbie from './ChatLobbie';
-import Messages from './Messages';
+import { ChatState, IUser } from "../../Context/ChatProvider";
+import ChatForm from "./ChatForm";
+import ChatHeader from "./ChatHeader";
+import ChatLobbie from "./ChatLobbie";
+import Messages from "./Messages";
 
 // Connect to socket
 const socket = io("http://localhost:8080");
@@ -145,12 +144,12 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   return (
     <Box
       sx={{
-        background: "#70C3FF",
         height: 1 / 1,
         display: "flex",
         flexWrap: "wrap",
         width: 1 / 1,
         alignContent: "space-between",
+        background: "#E3E1E3",
       }}
     >
       <CssBaseline />

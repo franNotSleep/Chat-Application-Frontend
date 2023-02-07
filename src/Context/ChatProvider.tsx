@@ -1,6 +1,6 @@
-import axios from 'axios';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import axios from "axios";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 interface IChatProviderProps {
   children: React.ReactNode;
@@ -16,6 +16,10 @@ type ChatContent = {
   openDrawer: boolean;
   setOpenDrawer: (open: boolean) => void;
   randomQuote: RandomQuote | undefined;
+  setMyGroups: (groups: IGroup[]) => void;
+  myGroups: IGroup[];
+  setMyFilteredGroups: (groups: IGroup[]) => void;
+  myFilteredGroups: IGroup[];
 };
 
 type RandomQuote = {
@@ -35,15 +39,23 @@ export interface IUser {
   aboutMe?: string;
 }
 
+export interface IUserArray {
+  kind: "user";
+  users: IUser[];
+}
+
 export interface IGroup {
   _id: string;
   name: string;
   admin: {
     name: string;
     _id: string;
+    avatar?: string;
   };
+  pic?: string;
   participants: IUser[];
   createdAt?: Date | string;
+  updatedAt?: string;
 }
 
 const ChatContext = createContext<ChatContent>({
@@ -56,9 +68,17 @@ const ChatContext = createContext<ChatContent>({
   openDrawer: false,
   setOpenDrawer: () => {},
   randomQuote: undefined,
+  setMyGroups: () => {},
+  myGroups: [],
+  setMyFilteredGroups: () => {},
+  myFilteredGroups: [],
 });
 
-type ComponentValue = 0 | 1 | 2 | 3 | 4 | 5 | null;
+export interface IGroupResponse {
+  group: IGroup[];
+}
+
+export type ComponentValue = 0 | 1 | 2 | 3 | 4 | 5 | null;
 
 const ChatProvider = ({ children }: IChatProviderProps) => {
   const navigate = useNavigate();
@@ -67,6 +87,8 @@ const ChatProvider = ({ children }: IChatProviderProps) => {
   const [user, setUser] = useState<IUser>();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [randomQuote, setRandomQuote] = useState<RandomQuote>();
+  const [myGroups, setMyGroups] = useState<IGroup[]>([]);
+  const [myFilteredGroups, setMyFilteredGroups] = useState<IGroup[]>(myGroups);
 
   const generateRandomQuote = async () => {
     const { data } = await axios.get<RandomQuote>(
@@ -99,6 +121,10 @@ const ChatProvider = ({ children }: IChatProviderProps) => {
         openDrawer,
         setOpenDrawer,
         randomQuote,
+        setMyGroups,
+        myGroups,
+        setMyFilteredGroups,
+        myFilteredGroups,
       }}
     >
       {children}

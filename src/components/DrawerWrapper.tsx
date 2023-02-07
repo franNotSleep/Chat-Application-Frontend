@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import { Box, Drawer } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -16,6 +17,7 @@ const style = {
 
 type DrawerWrapperProps = {
   children: React.ReactNode;
+  anchor?: Anchor;
 };
 
 type Anchor = "top" | "left" | "bottom" | "right";
@@ -41,19 +43,36 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
     };
 
   return (
-    <React.Fragment>
-      <Drawer anchor={"left"} open={openDrawer} onClose={toggleDrawer(false)}>
-        <Box
-          sx={{
-            width: { xs: 240, sm: 400, md: 500 },
-            background: "linear-gradient(to top, #2193b0, #6dd5ed)",
-            height: "100%",
+    <Drawer
+      anchor={props.anchor ?? "left"}
+      open={openDrawer}
+      onClose={toggleDrawer(false)}
+    >
+      {props.anchor != "bottom" && (
+        <CloseIcon
+          onClick={() => {
+            setOpenDrawer(false);
           }}
-        >
-          {props.children}
-        </Box>
-      </Drawer>
-    </React.Fragment>
+          sx={{
+            width: 1 / 1,
+            background: "linear-gradient(to top, #2193b0, #6dd5ed)",
+            color: "#fff",
+            cursor: "pointer",
+          }}
+        />
+      )}
+
+      <Box
+        sx={{
+          width: "100%",
+          background: "linear-gradient(to top, #2193b0, #6dd5ed)",
+          height: "100%",
+          minWidth: "300px",
+        }}
+      >
+        {props.children}
+      </Box>
+    </Drawer>
   );
 };
 

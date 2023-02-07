@@ -1,13 +1,12 @@
-import Box from '@mui/material/Box';
-import axios from 'axios';
-import React, { useState } from 'react';
+import Box from "@mui/material/Box";
+import axios from "axios";
+import React, { useState } from "react";
 
-import { ChatState } from '../../Context/ChatProvider';
-import Profile from '../Auth/Profile';
-import { IGroup } from '../Chat/ChatDisplay';
-import CreateGroup from './CreateGroup';
-import MyGroups from './MyGroups';
-import SearchGroup from './SearchGroup';
+import { ChatState } from "../../Context/ChatProvider";
+import { IGroup } from "../Chat/ChatDisplay";
+import Group from "./Group";
+import GroupTabs from "./GroupTabs";
+import NewGroup from "./NewGroup";
 
 const GroupNav = () => {
   const [open, setOpen] = React.useState(false);
@@ -67,8 +66,22 @@ const GroupNav = () => {
   };
 
   return (
-    <Box>
-      {value == 1 ? (
+    <Box
+      sx={{
+        height: "100%",
+      }}
+    >
+      {/* ==========Tabs Start========== */}
+      <GroupTabs />
+      {/* ==========Tabs End========== */}
+
+      {/* ==========Group Start========== */}
+      {value == 0 && <Group />}
+      {/* ==========Group End========== */}
+      {/* ==========New Group Start========== */}
+      {value == 1 && <NewGroup />}
+      {/* ==========New Group End========== */}
+      {/* {value == 1 ? (
         <CreateGroup
           open={open}
           handleClose={() => {
@@ -102,7 +115,7 @@ const GroupNav = () => {
         />
       ) : (
         ""
-      )}
+      )} */}
     </Box>
   );
 };

@@ -5,17 +5,24 @@ import { Avatar, Checkbox, List, ListItem, ListItemAvatar, ListItemText } from '
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import { ChatState, IUser } from '../../Context/ChatProvider';
+import { ChatState, IGroup, IUser } from '../../Context/ChatProvider';
 import StyledInputAutocomplete from '../StyledInput/StyledInputAutocomplete';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 interface ParticipantsFieldProps {
-  onChangeUserIdHandler(
-    e: React.SyntheticEvent<Element, Event>,
-    users: IUser[]
-  ): void;
+  // onChangeUserIdHandler(
+  //   e: React.SyntheticEvent<Element, Event>,
+  //   value: IUser[]
+  // ): void;
+  changeAutocompleteHandler?:
+    | ((
+        event: React.SyntheticEvent<Element, Event>,
+        value: Array<IGroup | IUser> | IUser | IGroup | null
+      ) => void)
+    | undefined;
+  multipleSelect?: boolean;
 }
 
 interface IUserResponse {
@@ -69,8 +76,9 @@ const ParticipantsField = (props: ParticipantsFieldProps) => {
       changeHandler={(e) => {
         setInput(e.target.value);
       }}
+      changeAutocompleteHandler={props.changeAutocompleteHandler}
       options={users}
-      icon={<AddIcon />}
+      icon={<AddIcon sx={{ color: "#fff" }} />}
       multipleSelect={true}
       renderOption={(props, option, { selected }) => (
         <li

@@ -82,16 +82,18 @@ const StyledInputAutocomplete = ({
   value,
   changeHandler,
   changeAutocompleteHandler,
-  multipleSelect,
   renderOption,
+  multipleSelect,
   icon,
 }: IStyledInputAutocomplete) => {
   return (
     <Autocomplete
+      multiple={multipleSelect ?? false}
       options={options}
+      disableCloseOnSelect
       getOptionLabel={getOptionLabel}
       onChange={changeAutocompleteHandler}
-      style={{ width: 300 }}
+      style={{ width: "100%" }}
       renderOption={renderOption}
       renderInput={(params) => {
         const { InputLabelProps, InputProps, ...rest } = params;
