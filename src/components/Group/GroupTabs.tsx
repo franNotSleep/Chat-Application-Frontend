@@ -12,16 +12,17 @@ const GroupTabs = () => {
     event: React.SyntheticEvent,
     newValue: ComponentValue
   ) => {
-
     // value 0 -> <Groups /> component
-    // value 1 -> <CreateGroup /> component
+    // value 1 -> <NewGroup /> component
+    // value 2 -> <CreateGroup /> component
     setValue(newValue);
   };
 
   return (
     <Tabs value={value} onChange={handleChange} variant="fullWidth">
       <Tab icon={<Groups2Icon />} label="Groups" />
-      <Tab icon={<GroupAddIcon />} label="Create" />
+      <Tab icon={<GroupAddIcon />} label="Search Group" />
+      <Tab icon={<GroupAddIcon />} label="Create Group" />
     </Tabs>
   );
 };

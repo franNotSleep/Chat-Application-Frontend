@@ -1,15 +1,15 @@
-import Box from "@mui/material/Box";
-import axios from "axios";
-import React, { useState } from "react";
+import Box from '@mui/material/Box';
+import axios from 'axios';
+import React, { useState } from 'react';
 
-import { ChatState } from "../../Context/ChatProvider";
-import { IGroup } from "../Chat/ChatDisplay";
-import Group from "./Group";
-import GroupTabs from "./GroupTabs";
-import NewGroup from "./NewGroup";
+import { ChatState } from '../../Context/ChatProvider';
+import { IGroup } from '../Chat/ChatDisplay';
+import CreateGroup from './CreateGroup';
+import Group from './Group';
+import GroupTabs from './GroupTabs';
+import NewGroup from './NewGroup';
 
 const GroupNav = () => {
-  const [open, setOpen] = React.useState(false);
   const [group, setGroup] = React.useState<IGroup>();
   const { user, setSelectedGroup, value, setValue, setOpenDrawer } =
     ChatState();
@@ -22,10 +22,6 @@ const GroupNav = () => {
   };
 
   // This function only reset value, and open to the default value
-  const submitEffect = () => {
-    setValue(null);
-    setOpen(false);
-  };
 
   const searchSubmitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,16 +67,10 @@ const GroupNav = () => {
         height: "100%",
       }}
     >
-      {/* ==========Tabs Start========== */}
       <GroupTabs />
-      {/* ==========Tabs End========== */}
-
-      {/* ==========Group Start========== */}
       {value == 0 && <Group />}
-      {/* ==========Group End========== */}
-      {/* ==========New Group Start========== */}
       {value == 1 && <NewGroup />}
-      {/* ==========New Group End========== */}
+      {value == 2 && <CreateGroup />}
       {/* {value == 1 ? (
         <CreateGroup
           open={open}

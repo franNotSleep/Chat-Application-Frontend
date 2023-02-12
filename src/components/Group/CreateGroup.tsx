@@ -1,120 +1,117 @@
-import AddIcon from '@mui/icons-material/Add';
-import Diversity3Icon from '@mui/icons-material/Diversity3';
-import { Box, Button, Paper, Typography } from '@mui/material';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import { Autocomplete, Box, Button, Checkbox } from "@mui/material";
+import axios from "axios";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
-import { ChatState, IUser } from '../../Context/ChatProvider';
-import { IGroup } from '../Chat/ChatDisplay';
-import DrawerWrapper from '../DrawerWrapper';
-import StyledInput from '../StyledInput/StyledInput';
-import ParticipantsField from './ParticipantsField';
+import { ChatState, IGroup, IUser } from "../../Context/ChatProvider";
+import { SearchBox } from "./SearchGroupBar";
 
-interface ICreateGroupProps {
-  open: boolean;
-  handleClose(): void;
-  onSubmitEffect: () => void;
+interface IUserResponse {
+  users: IUser[];
 }
 
-interface ICreateGroupData {
-  participants: string[];
-  name: string;
-  admin?: string;
-}
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const CreateGroup = (props: ICreateGroupProps) => {
-  const [input, setInput] = useState<ICreateGroupData>({
-    participants: [],
-    name: "",
-    admin: "",
-  });
-  const { user, setSelectedGroup } = ChatState();
+/**
+ * @Note add filtering users
+ */
+const CreateGroup = () => {
+  const [name, setName] = useState("");
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [participants, setParticipants] = useState<IUser[]>([]);
+  const { user, setSelectedGroup, setValue } = ChatState();
 
-  const changeAutocompleteHandler = (
-    e: React.SyntheticEvent<Element, Event>,
-    users: IUser | IGroup | (IUser | IGroup)[] | null
-  ) => {
-    if (users instanceof Array) {
-      users.map((user) => {
-        setInput({
-          ...input,
-          participants: [...input.participants, user._id],
-        });
-      });
-    }
-  };
-
-  const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
+    const newGroupInput = { name, admin: user?._id, participants };
+
     try {
-      const requestConfig = {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      };
-      const newGroup = await axios.post<IGroup>(
+      const { data } = await axios.post<IGroup>(
         "http://localhost:8080/api/v1/group/",
-        input,
-        requestConfig
+        newGroupInput,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
       );
-      setSelectedGroup(newGroup.data);
-      props.onSubmitEffect();
-    } catch (err: any) {
-      console.log(err.response.data);
+      setSelectedGroup(data);
+      setValue(0);
+    } catch (error: any) {
+      console.log(error.response);
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await axios.get<IUserResponse>(
+        `http://localhost:8080/api/v1/user?search=`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      setUsers(data.users);
+    })();
+  }, []);
 
   return (
-    <DrawerWrapper anchor="bottom">
-      <Paper
-        sx={{
-          background: "#70C3FF",
-          display: "flex",
-          flexWrap: "wrap",
-          alignContent: "space-around",
-          textAlign: "center",
+    <Box component="form" onSubmit={submitHandler}>
+      {/* ========== START INPUT FIELD ============ */}
+      <SearchBox
+        margin="normal"
+        fullWidth
+        variant="outlined"
+        placeholder="Group Name"
+        inputProps={{ "aria-label": "search" }}
+        value={name}
+        onChange={(e) => {
+          setName(e.target.value);
         }}
-        component="form"
-        onSubmit={submitHandler}
-      >
-        <Typography variant="h4" component="p" sx={{ color: "#fff" }}>
-          New Group
-        </Typography>
-        <Box
-          sx={{
-            width: "90%",
-          }}
-        >
-          <StyledInput
-            icon={<Diversity3Icon sx={{ color: "#fff" }} />}
-            placeholder="Group Name"
-            changeHandler={(e) => {
-              setInput({
-                ...input,
-                name: e.target.value,
-              });
-            }}
-            value={input.name}
-          />
-          <ParticipantsField
-            changeAutocompleteHandler={changeAutocompleteHandler}
-          />
-        </Box>
+      />
+      {/* ========== END INPUT FIELD ============ */}
 
-        <Button
-          variant="contained"
-          sx={{
-            background: "#fff",
-            color: "#70C3FF",
-          }}
-          type="submit"
-          endIcon={<AddIcon />}
-        >
-          Create
-        </Button>
-      </Paper>
-    </DrawerWrapper>
+      <Autocomplete
+        multiple
+        options={users}
+        disableCloseOnSelect
+        onChange={(event, users) => {
+          setParticipants(users);
+        }}
+        getOptionLabel={(option) => option.name}
+        renderOption={(props, option, { selected }) => (
+          <li {...props}>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            {option.name}
+          </li>
+        )}
+        renderInput={(params) => (
+          <SearchBox
+            {...params}
+            label="Participants"
+            fullWidth
+            placeholder="Participants"
+            margin="normal"
+          />
+        )}
+      />
+      <Button
+        variant="contained"
+        size="large"
+        type="submit"
+        sx={{ margin: "auto", width: { xs: "250px", md: "400px" } }}
+      >
+        Create
+      </Button>
+    </Box>
   );
 };
 

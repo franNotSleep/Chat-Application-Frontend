@@ -4,7 +4,6 @@ import { CssBaseline } from "@mui/material";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
 
 import ChatDisplay from "../components/Chat/ChatDisplay";
 import GroupNav from "../components/Group/GroupNav";
@@ -31,9 +30,6 @@ const ChatPages = () => {
     setSelectedGroup(undefined);
   };
 
-  // Notes:
-  // Make [][] this structure
-  // quit the same as whatsapp
   return (
     <ThemeProvider theme={theme}>
       <Container

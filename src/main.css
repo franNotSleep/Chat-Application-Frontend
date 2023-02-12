@@ -1,6 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Roboto&display=swap");
 
-body {
-  /* text-align: center; */
-  /* background: #70c3ff; */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ffa06b;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ff782d;
 }
