@@ -1,4 +1,4 @@
-import { Box, CssBaseline } from "@mui/material";
+import { Box, CssBaseline, Stack } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
@@ -40,7 +40,10 @@ export interface IMessage {
 interface IChatDisplayProps {
   cleanGroup: () => void;
 }
-
+/**
+ *
+ * @Nota Make a layout in a way that the navbar stay in the top, message in the middle and the form in the bottom
+ */
 const ChatDisplay = (props: IChatDisplayProps) => {
   const [message, setMessage] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<IMessage>();
@@ -129,6 +132,7 @@ const ChatDisplay = (props: IChatDisplayProps) => {
     // Get message related to the group
     getMessage();
     selectedChatCompare = selectedGroup?._id;
+    console.log(selectedChatCompare);
   }, [selectedGroup]);
 
   useEffect(() => {
@@ -144,45 +148,36 @@ const ChatDisplay = (props: IChatDisplayProps) => {
   return (
     <Box
       sx={{
-        height: 1 / 1,
-        display: "flex",
-        flexWrap: "wrap",
         width: 1 / 1,
-        alignContent: "space-between",
-        background: "#E3E1E3",
+        height: 1 / 1,
+        position: "relative",
+        overflowY: "auto",
       }}
     >
       <CssBaseline />
-      {/* Chat Header start */}
-      {selectedGroup && (
-        <ChatHeader groupName={selectedGroup.name} leaveGroup={leaveGroup} />
-      )}
-      {/* Chat Header end */}
-      {/* ======================== */}
-      {/* Chat Start */}
 
-      <Box
-        sx={{
-          width: 1 / 1,
-          height: "70vh",
-          position: "relative",
-          overflowY: "auto",
-        }}
-      >
-        {selectedGroup && <Messages messages={message} />}
-        {!selectedGroup && <ChatLobbie />}
-      </Box>
-      {/* Chat End */}
-      {/* ======================== */}
-      {/* Chat footer start */}
       {selectedGroup && (
-        <ChatForm
-          onSubmitHandler={submitHandler}
-          onChangeHandler={changeHandler}
-          content={newMessage ? newMessage.content : ""}
-        />
+        <Stack
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            height: { xs: "100vh", md: 1 / 1 },
+            // height: { xs: "100vh", md: 1 / 1 },
+            overflow: "auto",
+          }}
+        >
+          <ChatHeader groupName={selectedGroup.name} leaveGroup={leaveGroup} />
+          <Messages messages={message} />
+          <ChatForm
+            onSubmitHandler={submitHandler}
+            onChangeHandler={changeHandler}
+            content={newMessage ? newMessage.content : ""}
+          />
+        </Stack>
       )}
-      {/* Chat footer end */}
+      {!selectedGroup && <ChatLobbie />}
     </Box>
   );
 };

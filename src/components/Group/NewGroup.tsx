@@ -1,9 +1,11 @@
+import { Search } from "@mui/icons-material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import {
   Avatar,
   AvatarGroup,
   Box,
   Chip,
+  InputAdornment,
   List,
   ListItem,
   ListItemAvatar,
@@ -104,6 +106,13 @@ const NewGroup = () => {
         inputProps={{ "aria-label": "search" }}
         value={search}
         onChange={changeSearchHandler}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search />
+            </InputAdornment>
+          ),
+        }}
       />
       <Box
         sx={{
@@ -132,7 +141,7 @@ const NewGroup = () => {
                 }
               />
 
-              <AvatarGroup max={4}>
+              <AvatarGroup max={2}>
                 <Avatar
                   src={group.admin.avatar}
                   alt={`${group.admin.name} photo`}

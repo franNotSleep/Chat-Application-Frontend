@@ -1,7 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from "react-router-dom";
 
-import AuthForm from './components/Auth/AuthForm';
-import ChatPages from './pages/ChatPages';
+import AuthForm from "./components/Auth/AuthForm";
+import ChatPages from "./pages/ChatPages";
 
 function App() {
   return (

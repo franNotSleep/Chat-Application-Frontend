@@ -59,7 +59,13 @@ const CreateGroup = () => {
   }, []);
 
   return (
-    <Box component="form" onSubmit={submitHandler}>
+    <Box
+      component="form"
+      onSubmit={submitHandler}
+      sx={{
+        height: "100%",
+      }}
+    >
       {/* ========== START INPUT FIELD ============ */}
       <SearchBox
         margin="normal"
@@ -107,7 +113,7 @@ const CreateGroup = () => {
         variant="contained"
         size="large"
         type="submit"
-        sx={{ margin: "auto", width: { xs: "250px", md: "400px" } }}
+        sx={{ margin: "auto", width: "100%" }}
       >
         Create
       </Button>

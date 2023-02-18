@@ -1,126 +1,85 @@
-import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-import axios from 'axios';
-import React, { useState } from 'react';
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Avatar, Box, Chip, Divider, Stack, Typography } from "@mui/material";
+import axios from "axios";
+import React from "react";
+import { useNavigate } from "react-router";
 
-import { ChatState } from '../../Context/ChatProvider';
-import DrawerWrapper from '../DrawerWrapper';
+import { ChatState } from "../../Context/ChatProvider";
 
-interface IProfileProps {
-  open: boolean;
-  handleClose(): void;
-}
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  boxShadow: 24,
-  p: 4,
-  display: "flex",
-  flexDirection: "column",
-};
-
-type Anchor = "top" | "left" | "bottom" | "right";
-
-const Profile = (props: IProfileProps) => {
-  const { user, openDrawer, setOpenDrawer, randomQuote } = ChatState();
-
-  const generateRandomQuote = async () => {
-    const { data } = await axios.get("https://api.quotable.io/random");
-    console.log(data);
-  };
+const Profile = () => {
+  const { user, randomQuote } = ChatState();
+  const navigate = useNavigate();
 
   /**
-   *
-   * @param open determine whether open the drawer
-   * @description Close the drawer if we tap out of the drawer and when press Shift
+   * @description Make an request to server to logout from the server and after clean localStorage.
    */
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-      setOpenDrawer(open);
-    };
-
+  const logOut = async () => {
+    axios.get("http://localhost:8080/api/v1/auth/logout");
+    localStorage.clear();
+    navigate("/");
+  };
   return (
-    <DrawerWrapper>
-      <List>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar alt={user?.name} src={user?.avatar} />
-          </ListItemAvatar>
-        </ListItem>
-        <Divider textAlign="left" sx={{ color: "#fff" }}>
-          Name
-        </Divider>
-        <ListItem>
-          <ListItemText
-            secondary={
-              <>
-                <Typography component="span" variant="body2">
-                  {user?.name}
-                </Typography>
-              </>
-            }
-          ></ListItemText>
-        </ListItem>
-        <Divider textAlign="left" sx={{ color: "#fff" }}>
-          Email
-        </Divider>
-        <ListItem>
-          <ListItemText
-            secondary={
-              <>
-                <Typography component="span" variant="body2">
-                  {user?.email}
-                </Typography>
-              </>
-            }
-          ></ListItemText>
-        </ListItem>
-        <Divider textAlign="left" sx={{ color: "#fff" }}>
-          ID
-        </Divider>
-        <ListItem>
-          <ListItemText
-            sx={{ color: "#fff" }}
-            secondary={
-              <>
-                <Typography component="span" variant="body2">
-                  {user?._id}
-                </Typography>
-              </>
-            }
-          ></ListItemText>
-        </ListItem>
-        {!user?.aboutMe && (
-          <>
-            <Divider textAlign="left" sx={{ color: "#fff" }}>
-              From {randomQuote?.author} to you
-            </Divider>
+    <Box
+      sx={{
+        padding: "20px",
+      }}
+    >
+      <Stack alignItems={"center"} rowGap={5}>
+        <Avatar
+          src={user?.avatar}
+          alt={`${user?.name}`}
+          sx={{ width: 70, height: 70 }}
+        />
+        <Box sx={{ textAlign: "center", letterSpacing: 2 }}>
+          <Typography
+            sx={{
+              fontSize: "11px",
+              color: "#FFFE1E",
+              margin: 0,
+            }}
+          >
+            {user?.email}
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "16px",
+              color: "#FF782D",
+              margin: 0,
+            }}
+          >
+            {user?.name}
+          </Typography>
+        </Box>
 
-            <ListItem sx={{ textAlign: "left" }}>
-              <ListItemText
-                secondary={
-                  <>
-                    <Typography component="span" variant="body2">
-                      "{randomQuote?.content}"
-                    </Typography>
-                    <Divider orientation="vertical" />-{randomQuote?.author}
-                  </>
-                }
-              ></ListItemText>
-            </ListItem>
-          </>
-        )}
-      </List>
-    </DrawerWrapper>
+        <Box
+          sx={{ position: "relative", fontSize: "12px", textAlign: "center" }}
+        >
+          <Divider textAlign="left">
+            <Chip label="About me" color="primary" />
+          </Divider>
+
+          {user?.aboutMe ?? `"${randomQuote?.content}"-${randomQuote?.author}`}
+          <Divider textAlign="right">
+            <Avatar
+              src={user?.avatar}
+              alt={`${user?.name}`}
+              sx={{ width: 30, height: 30 }}
+            />
+          </Divider>
+        </Box>
+
+        <Divider>
+          <Chip
+            icon={<LogoutIcon />}
+            label="Log Out"
+            color="error"
+            onClick={() => {
+              logOut();
+            }}
+          />
+        </Divider>
+      </Stack>
+    </Box>
   );
 };
 

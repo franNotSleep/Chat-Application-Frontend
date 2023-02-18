@@ -1,6 +1,6 @@
-import SendIcon from '@mui/icons-material/Send';
-import { IconButton, InputBase, Paper } from '@mui/material';
-import React, { useState } from 'react';
+import SendIcon from "@mui/icons-material/Send";
+import { IconButton, InputBase, Paper } from "@mui/material";
+import React, { useState } from "react";
 
 interface IChatFormProps {
   onSubmitHandler(e: React.ChangeEvent<HTMLFormElement>): void;
@@ -18,7 +18,6 @@ const ChatForm = (props: IChatFormProps) => {
       sx={{
         p: "0.5rem",
         display: "flex",
-        width: 1 / 1,
       }}
     >
       <InputBase

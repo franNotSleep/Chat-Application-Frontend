@@ -1,9 +1,8 @@
 import "./style.css";
 
-import { CssBaseline } from "@mui/material";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import { Box } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 
 import ChatDisplay from "../components/Chat/ChatDisplay";
 import GroupNav from "../components/Group/GroupNav";
@@ -24,33 +23,41 @@ const theme = createTheme({
 });
 
 const ChatPages = () => {
-  const { setSelectedGroup } = ChatState();
+  const { setSelectedGroup, selectedGroup } = ChatState();
+  const [isSelectedGroup, setIsSelectedGroup] = useState(false);
 
   const cleanGroup = () => {
     setSelectedGroup(undefined);
+    setIsSelectedGroup(false);
   };
-
+  useEffect(() => {
+    setIsSelectedGroup(selectedGroup ? true : false);
+  }, [selectedGroup]);
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        maxWidth="xl"
+      <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", md: "row" },
           height: "100vh",
-          justifyContent: "center",
         }}
       >
-        <Grid container>
-          <Grid item xs={12} sm={4}>
-            <GroupNav />
-          </Grid>
-          <Grid item xs={0} sm={8}>
-            <ChatDisplay cleanGroup={cleanGroup} />
-          </Grid>
-        </Grid>
-        <CssBaseline />
-        {/* <Navbar /> */}
-      </Container>
+        <Box
+          sx={{
+            display: { xs: isSelectedGroup ? "none" : "block", md: "block" },
+          }}
+        >
+          <GroupNav />
+        </Box>
+        <Box
+          sx={{
+            width: 1 / 1,
+            display: { xs: isSelectedGroup ? "block" : "none", md: "block" },
+          }}
+        >
+          <ChatDisplay cleanGroup={cleanGroup} />
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 };

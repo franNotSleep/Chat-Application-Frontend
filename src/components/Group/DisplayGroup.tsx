@@ -1,4 +1,4 @@
-import SendIcon from "@mui/icons-material/Send";
+import { Send } from "@mui/icons-material";
 import {
   Avatar,
   AvatarGroup,
@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { ChatState, IUser } from "../../Context/ChatProvider";
@@ -37,7 +37,6 @@ const DisplayGroup = () => {
         },
       }
     );
-
     setMyGroups(data.group);
   };
   /**
@@ -80,12 +79,6 @@ const DisplayGroup = () => {
     setValue(0);
   };
 
-  const toUTCDate = (date: string | Date) => {
-    return date instanceof Date
-      ? date.toLocaleDateString()
-      : new Date(date).toLocaleString();
-  };
-
   useEffect(() => {
     getMyGroups();
   }, [selectedGroup, navigate]);
@@ -96,7 +89,6 @@ const DisplayGroup = () => {
         overflowY: "auto",
       }}
     >
-      {!myFilteredGroups.length && "No Group"}
       <List>
         {myFilteredGroups.map((group) => (
           <ListItem>
@@ -107,7 +99,7 @@ const DisplayGroup = () => {
               primary={group.name}
               secondary={
                 <Chip
-                  icon={<SendIcon />}
+                  icon={<Send />}
                   label="GO"
                   variant="outlined"
                   color="success"

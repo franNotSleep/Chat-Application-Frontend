@@ -1,30 +1,17 @@
-import { Avatar, Box, Paper, Typography } from '@mui/material';
-import React from 'react';
-import { useNavigate } from 'react-router';
+import { Avatar, Box, Paper, Typography } from "@mui/material";
+import React from "react";
+import Scrollbars from "react-custom-scrollbars-2";
 
-import { IUser } from '../Group/CreateGroup';
-import { IMessage } from './ChatDisplay';
+import { ChatState, IUser } from "../../Context/ChatProvider";
+import { IMessage } from "./ChatDisplay";
 
 interface IMessagesProps {
   messages: IMessage[];
 }
 
 const Messages = (props: IMessagesProps) => {
-  const navigate = useNavigate();
+  const { user } = ChatState();
   const messageEndRef = React.useRef<HTMLDivElement>(null);
-
-  let currentUser: IUser;
-
-  // If not token, go back to the form component
-  try {
-    if (JSON.parse(localStorage.getItem("user") || "")) {
-      currentUser = JSON.parse(localStorage.getItem("user") || "");
-    } else {
-      navigate("/");
-    }
-  } catch (err) {
-    navigate("/");
-  }
 
   // Scroll on new message
   React.useEffect(() => {
@@ -35,21 +22,44 @@ const Messages = (props: IMessagesProps) => {
     <Box
       sx={{
         display: "flex",
-        height: "70vh",
         flexDirection: "column",
+        padding: "10px",
+        justifyContent: "flex-end",
+        // height: "200px",
+        height: { xs: "80%", md: "75%" },
+        overflowY: "scroll",
+        border: "1px solid blue",
       }}
     >
-      {props.messages.length === 0 && "Not Message"}
-      {props.messages.map((message) => (
-        <Message
-          sender={message.sender}
-          message={message}
-          self={currentUser._id === message.sender._id ? true : false}
-          key={message._id}
-        />
-      ))}
-
-      <div ref={messageEndRef} style={{ height: "5px" }} />
+      <Scrollbars
+        style={{
+          height: "100%",
+          // display: "flex",
+          // flexDirection: "column",
+          // padding: "10px",
+          // justifyContent: "flex-end",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "10px",
+            justifyContent: "flex-end",
+          }}
+        >
+          {props.messages.length === 0 && "Not Message"}
+          {props.messages.map((message) => (
+            <Message
+              sender={message.sender}
+              message={message}
+              self={user?._id === message.sender._id ? true : false}
+              key={message._id}
+            />
+          ))}
+        </Box>
+        <div ref={messageEndRef} style={{ height: "5px" }} />
+      </Scrollbars>
     </Box>
   );
 };
@@ -60,7 +70,6 @@ interface IMessageProps {
   sender: IUser;
 }
 const Message = (props: IMessageProps) => {
-  const date = new Date(props.message.createdAt?.toLocaleString() ?? "");
   return (
     <Paper
       elevation={3}
@@ -71,6 +80,7 @@ const Message = (props: IMessageProps) => {
         alignSelf: props.self ? "flex-end" : "flex-start",
         borderRadius: "50px",
         display: "flex",
+        width: "max-content",
       }}
     >
       <Avatar

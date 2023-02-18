@@ -83,7 +83,7 @@ export type ComponentValue = 0 | 1 | 2 | 3 | 4 | 5 | null;
 const ChatProvider = ({ children }: IChatProviderProps) => {
   const navigate = useNavigate();
   const [selectedGroup, setSelectedGroup] = useState<IGroup>();
-  const [value, setValue] = useState<ComponentValue>(null);
+  const [value, setValue] = useState<ComponentValue>(3);
   const [user, setUser] = useState<IUser>();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [randomQuote, setRandomQuote] = useState<RandomQuote>();

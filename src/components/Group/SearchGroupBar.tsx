@@ -1,3 +1,5 @@
+import { Search } from "@mui/icons-material";
+import { InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import React, { useEffect, useState } from "react";
@@ -8,12 +10,9 @@ export const SearchBox = styled(TextField)(({ theme }) => ({
   "& fieldset": {
     borderRadius: "20px",
     marginRight: "40px",
+    margin: "auto",
   },
 }));
-/**
- *
- * @Nota completar el filtering
- */
 
 const SearchGroupBar = () => {
   const [search, setSearch] = useState("");
@@ -40,6 +39,13 @@ const SearchGroupBar = () => {
       inputProps={{ "aria-label": "search" }}
       value={search}
       onChange={changeSearchHandler}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Search />
+          </InputAdornment>
+        ),
+      }}
     />
   );
 };

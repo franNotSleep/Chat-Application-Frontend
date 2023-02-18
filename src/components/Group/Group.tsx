@@ -6,12 +6,7 @@ import SearchGroupBar from "./SearchGroupBar";
 
 const Group = () => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Box>
       <SearchGroupBar />
       <DisplayGroup />
     </Box>
